@@ -12,6 +12,18 @@ export async function NavBar() {
           <Link href="/" className="text-neutral-900 dark:text-neutral-100">
             Dashboard
           </Link>
+          <Link
+            href="/learn"
+            className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          >
+            Leren
+          </Link>
+          <Link
+            href="/backtest"
+            className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          >
+            Backtesten
+          </Link>
         </nav>
         <form
           action={async () => {

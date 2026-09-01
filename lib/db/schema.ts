@@ -81,11 +81,17 @@ export const lessons = pgTable("lessons", {
   title: text("title").notNull(),
   videoRef: text("video_ref"),
   content: text("content"),
-  quiz: jsonb("quiz"),
+  quiz: jsonb("quiz").$type<LessonQuiz>(),
   completed: boolean("completed").notNull().default(false),
   quizScore: integer("quiz_score"),
   suggestedHypothesis: text("suggested_hypothesis"),
   order: integer("order").notNull().default(0),
+});
+
+export const glossaryTerms = pgTable("glossary_terms", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  term: text("term").notNull(),
+  definition: text("definition").notNull(),
 });
 
 export const tradesRelations = relations(trades, ({ one }) => ({
@@ -106,7 +112,20 @@ export const backtestSessionsRelations = relations(
   }),
 );
 
+export interface LessonQuizQuestion {
+  question: string;
+  options: string[];
+  correctIndex: number;
+}
+
+export interface LessonQuiz {
+  questions: LessonQuizQuestion[];
+}
+
 export type Trade = typeof trades.$inferSelect;
 export type NewTrade = typeof trades.$inferInsert;
 export type BacktestSession = typeof backtestSessions.$inferSelect;
+export type NewBacktestSession = typeof backtestSessions.$inferInsert;
 export type Lesson = typeof lessons.$inferSelect;
+export type NewLesson = typeof lessons.$inferInsert;
+export type GlossaryTerm = typeof glossaryTerms.$inferSelect;

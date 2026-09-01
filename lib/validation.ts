@@ -38,3 +38,29 @@ export const quickTradeSchema = tradeFormSchema.pick({
   tradedAt: true,
   outcome: true,
 });
+
+export const lessonQuizSchema = z.object({
+  questions: z.array(
+    z.object({
+      question: z.string().min(1),
+      options: z.array(z.string().min(1)).min(2),
+      correctIndex: z.number().int().min(0),
+    }),
+  ),
+});
+
+export const lessonFormSchema = z.object({
+  title: z.string().min(1, "Titel is verplicht"),
+  videoRef: z.string().nullable().optional(),
+  content: z.string().nullable().optional(),
+  quiz: lessonQuizSchema.nullable().optional(),
+  suggestedHypothesis: z.string().nullable().optional(),
+  order: z.coerce.number().int().default(0),
+});
+
+export type LessonFormValues = z.infer<typeof lessonFormSchema>;
+
+export const glossaryTermFormSchema = z.object({
+  term: z.string().min(1, "Term is verplicht"),
+  definition: z.string().min(1, "Definitie is verplicht"),
+});
