@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { NavBar } from "@/components/NavBar";
+import { Sidebar } from "@/components/Sidebar";
+import { Topbar } from "@/components/Topbar";
 
 export const metadata: Metadata = {
   title: "Trading Journal",
@@ -10,9 +11,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="nl" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-neutral-50 dark:bg-neutral-950">
-        <NavBar />
-        <main className="flex-1">{children}</main>
+      <body className="flex h-full min-h-full bg-slate-50">
+        <Sidebar />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <Topbar />
+          <main className="flex-1 overflow-y-auto">{children}</main>
+        </div>
       </body>
     </html>
   );

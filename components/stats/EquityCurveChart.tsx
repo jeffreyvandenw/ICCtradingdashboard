@@ -17,7 +17,7 @@ interface EquityCurveChartProps {
 export function EquityCurveChart({ data }: EquityCurveChartProps) {
   if (data.length === 0) {
     return (
-      <p className="py-8 text-center text-sm text-neutral-400">
+      <p className="py-8 text-center text-sm text-slate-400">
         Nog geen live trades met een uitkomst.
       </p>
     );
@@ -45,7 +45,7 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
           <Line
             type="monotone"
             dataKey="cumulativeR"
-            stroke="#0ea5e9"
+            stroke="#4f46e5"
             strokeWidth={2}
             dot={false}
           />

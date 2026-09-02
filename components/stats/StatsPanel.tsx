@@ -1,13 +1,39 @@
 import type { DashboardStats } from "@/lib/stats";
+import { cn } from "@/lib/utils";
 import { EquityCurveChart } from "./EquityCurveChart";
 
-function StatCard({ label, value }: { label: string; value: string }) {
+type Tone = "pos" | "neg" | "neutral";
+
+function toneClasses(tone: Tone): string {
+  if (tone === "pos") return "text-emerald-600";
+  if (tone === "neg") return "text-rose-600";
+  return "text-slate-900";
+}
+
+function HeroCard({
+  label,
+  value,
+  tone = "neutral",
+}: {
+  label: string;
+  value: string;
+  tone?: Tone;
+}) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
-      <p className="text-xs text-neutral-500">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <p className="text-xs font-medium text-slate-500">{label}</p>
+      <p className={cn("mt-1.5 text-2xl font-semibold", toneClasses(tone))}>
         {value}
       </p>
+    </div>
+  );
+}
+
+function MiniCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-3">
+      <p className="text-xs text-slate-500">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-slate-900">{value}</p>
     </div>
   );
 }
@@ -22,43 +48,65 @@ function fmtNum(value: number | null): string {
   return value.toFixed(2);
 }
 
+function fmtR(value: number): string {
+  return `${value > 0 ? "+" : ""}${value.toFixed(2)}R`;
+}
+
+function toneOf(value: number | null, positiveFrom = 0): Tone {
+  if (value == null) return "neutral";
+  if (!Number.isFinite(value)) return "pos";
+  if (value > positiveFrom) return "pos";
+  if (value < positiveFrom) return "neg";
+  return "neutral";
+}
+
 export function StatsPanel({ stats }: { stats: DashboardStats }) {
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        <StatCard label="Trades" value={String(stats.tradeCount)} />
-        <StatCard label="Gem. RR" value={fmtNum(stats.avgRR)} />
-        <StatCard label="Winrate" value={fmtPct(stats.winratePct)} />
-        <StatCard
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <HeroCard
+          label="Net resultaat"
+          value={fmtR(stats.netR)}
+          tone={toneOf(stats.netR)}
+        />
+        <HeroCard label="Winrate" value={fmtPct(stats.winratePct)} />
+        <HeroCard
+          label="Profit factor"
+          value={fmtNum(stats.profitFactor)}
+          tone={toneOf(stats.profitFactor, 1)}
+        />
+        <HeroCard
+          label="Gem. RR"
+          value={fmtNum(stats.avgRR)}
+          tone={toneOf(stats.avgRR)}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+        <MiniCard label="Trades" value={String(stats.tradeCount)} />
+        <MiniCard
           label="Trades / week"
           value={fmtNum(stats.avgTradesPerWeek)}
         />
-        <StatCard label="Profit factor" value={fmtNum(stats.profitFactor)} />
-        <StatCard label="Expectancy" value={`${fmtNum(stats.expectancy)}R`} />
-        <StatCard
+        <MiniCard label="Expectancy" value={`${fmtNum(stats.expectancy)}R`} />
+        <MiniCard
           label="Winrate long"
           value={fmtPct(stats.winrateByDirection.long)}
         />
-        <StatCard
+        <MiniCard
           label="Winrate short"
           value={fmtPct(stats.winrateByDirection.short)}
         />
-      </div>
-
-      <div className="grid grid-cols-3 gap-3">
-        <StatCard
-          label="Winrate London"
-          value={fmtPct(stats.winrateBySession.london)}
-        />
-        <StatCard label="Winrate NY" value={fmtPct(stats.winrateBySession.ny)} />
-        <StatCard
-          label="Winrate Asia"
-          value={fmtPct(stats.winrateBySession.asia)}
+        <MiniCard
+          label="Winrate NY"
+          value={fmtPct(stats.winrateBySession.ny)}
         />
       </div>
 
-      <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
-        <p className="mb-2 text-xs text-neutral-500">Equity curve (R)</p>
+      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p className="mb-2 text-xs font-medium text-slate-500">
+          Equity curve (R)
+        </p>
         <EquityCurveChart data={stats.equityCurve} />
       </div>
     </div>

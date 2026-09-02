@@ -14,6 +14,7 @@ export function tradeRMultiple(trade: Pick<Trade, "outcome" | "rr">): number {
 
 export interface DashboardStats {
   tradeCount: number;
+  netR: number;
   avgRR: number | null;
   winratePct: number | null;
   avgTradesPerWeek: number | null;
@@ -96,6 +97,7 @@ export function computeDashboardStats(trades: Trade[]): DashboardStats {
 
   return {
     tradeCount: decided.length,
+    netR: cumulative,
     avgRR,
     winratePct,
     avgTradesPerWeek,

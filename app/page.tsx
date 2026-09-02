@@ -4,6 +4,7 @@ import { computeDashboardStats, tradeRMultiple } from "@/lib/stats";
 import { dayKey, parseMonthParam } from "@/lib/date";
 import { MonthCalendar, type DayResult } from "@/components/calendar/MonthCalendar";
 import { StatsPanel } from "@/components/stats/StatsPanel";
+import { TradesTable } from "@/components/dashboard/TradesTable";
 
 export default async function DashboardPage({
   searchParams,
@@ -26,14 +27,12 @@ export default async function DashboardPage({
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-4 py-6">
+    <div className="mx-auto max-w-6xl space-y-6 px-6 py-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Dashboard
-        </h1>
+        <h1 className="text-xl font-semibold text-slate-900">Dashboard</h1>
         <Link
           href="/api/trades/export"
-          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
         >
           Exporteer CSV
         </Link>
@@ -41,7 +40,17 @@ export default async function DashboardPage({
 
       <StatsPanel stats={stats} />
 
-      <MonthCalendar monthDate={monthDate} dailyResults={dailyResults} />
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
+        <div className="xl:col-span-3">
+          <MonthCalendar monthDate={monthDate} dailyResults={dailyResults} />
+        </div>
+        <div className="xl:col-span-2">
+          <p className="mb-2 text-xs font-medium text-slate-500">
+            Recente trades
+          </p>
+          <TradesTable trades={liveTrades} />
+        </div>
+      </div>
     </div>
   );
 }
