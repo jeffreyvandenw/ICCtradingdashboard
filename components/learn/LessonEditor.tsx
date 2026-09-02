@@ -80,14 +80,14 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
   }
 
   const inputClass =
-    "mt-1 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800";
+    "mt-1 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm";
   const labelClass =
-    "block text-xs font-medium text-neutral-600 dark:text-neutral-400";
+    "block text-xs font-medium text-neutral-600";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+      className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4"
     >
       <div className="grid grid-cols-2 gap-3">
         <label className={`${labelClass} col-span-2`}>
@@ -138,7 +138,7 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+          <p className="text-sm font-medium text-neutral-900">
             Quizvragen
           </p>
           <button
@@ -153,7 +153,7 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
         {questions.map((q, qIndex) => (
           <div
             key={qIndex}
-            className="space-y-2 rounded-md border border-neutral-200 p-3 dark:border-neutral-800"
+            className="space-y-2 rounded-md border border-neutral-200 p-3"
           >
             <div className="flex items-start gap-2">
               <input
@@ -229,7 +229,7 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
+        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
       >
         {submitting ? "Opslaan..." : "Les opslaan"}
       </button>

@@ -10,7 +10,7 @@ import {
 import type { GlossaryTerm } from "@/lib/db/schema";
 
 const inputClass =
-  "w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800";
+  "w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm";
 
 function GlossaryRow({ term }: { term: GlossaryTerm }) {
   const router = useRouter();
@@ -21,7 +21,7 @@ function GlossaryRow({ term }: { term: GlossaryTerm }) {
 
   if (editing) {
     return (
-      <li className="space-y-2 rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+      <li className="space-y-2 rounded-lg border border-neutral-200 bg-white p-3">
         <input
           className={inputClass}
           value={termText}
@@ -64,13 +64,13 @@ function GlossaryRow({ term }: { term: GlossaryTerm }) {
   }
 
   return (
-    <li className="rounded-lg border border-neutral-200 bg-white p-3 text-sm dark:border-neutral-800 dark:bg-neutral-900">
+    <li className="rounded-lg border border-neutral-200 bg-white p-3 text-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-medium text-neutral-900 dark:text-neutral-100">
+          <p className="font-medium text-neutral-900">
             {term.term}
           </p>
-          <p className="text-neutral-600 dark:text-neutral-400">
+          <p className="text-neutral-600">
             {term.definition}
           </p>
         </div>
@@ -134,7 +134,7 @@ export function GlossaryManager({ terms }: { terms: GlossaryTerm[] }) {
         onChange={(e) => setQuery(e.target.value)}
       />
 
-      <div className="space-y-2 rounded-lg border border-dashed border-neutral-300 p-3 dark:border-neutral-700">
+      <div className="space-y-2 rounded-lg border border-dashed border-neutral-300 p-3">
         <input
           className={inputClass}
           placeholder="Nieuw begrip"
@@ -152,7 +152,7 @@ export function GlossaryManager({ terms }: { terms: GlossaryTerm[] }) {
           type="button"
           disabled={adding}
           onClick={handleAdd}
-          className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
+          className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
         >
           + Begrip toevoegen
         </button>

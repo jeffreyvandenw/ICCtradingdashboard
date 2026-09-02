@@ -32,10 +32,10 @@ export default async function BacktestSessionPage({
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+          <h1 className="text-xl font-semibold text-neutral-900">
             {format(session.createdAt, "d MMMM yyyy")}
           </h1>
-          <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="mt-1 text-sm text-neutral-600">
             {session.hypothesis}
           </p>
           {!isActive && (
@@ -46,7 +46,7 @@ export default async function BacktestSessionPage({
         </div>
         <Link
           href="/backtest"
-          className="shrink-0 text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          className="shrink-0 text-sm text-neutral-500 hover:text-neutral-900"
         >
           &larr; Alle sessies
         </Link>
@@ -64,11 +64,11 @@ export default async function BacktestSessionPage({
         </>
       ) : (
         session.summary && (
-          <div className="rounded-lg border border-neutral-200 bg-white p-4 text-sm dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="rounded-lg border border-neutral-200 bg-white p-4 text-sm">
             <p className="text-xs font-medium text-neutral-500">
               Samenvatting
             </p>
-            <p className="mt-1 text-neutral-700 dark:text-neutral-300">
+            <p className="mt-1 text-neutral-700">
               {session.summary}
             </p>
           </div>

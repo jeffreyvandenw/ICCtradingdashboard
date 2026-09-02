@@ -29,7 +29,7 @@ export function MarkCompleteButton({
       type="button"
       onClick={toggle}
       disabled={saving}
-      className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200"
+      className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 disabled:opacity-50"
     >
       {completed ? "Markeer als niet afgerond" : "Markeer als afgerond"}
     </button>

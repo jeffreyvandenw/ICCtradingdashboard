@@ -21,7 +21,7 @@ export default async function LessonPage({
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-6">
       <div className="flex items-start justify-between gap-4">
-        <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+        <h1 className="text-xl font-semibold text-neutral-900">
           {lesson.title}
         </h1>
         <div className="flex shrink-0 items-center gap-3">
@@ -47,7 +47,7 @@ export default async function LessonPage({
       )}
 
       {lesson.content && (
-        <div className="whitespace-pre-wrap rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300">
+        <div className="whitespace-pre-wrap rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-700">
           {lesson.content}
         </div>
       )}
@@ -64,7 +64,7 @@ export default async function LessonPage({
 
       <Link
         href={backtestHref}
-        className="inline-block rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white dark:bg-neutral-100 dark:text-neutral-900"
+        className="inline-block rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white"
       >
         Start backtest-sessie over dit onderwerp
       </Link>
@@ -72,7 +72,7 @@ export default async function LessonPage({
       <div>
         <Link
           href="/learn"
-          className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          className="text-sm text-neutral-500 hover:text-neutral-900"
         >
           &larr; Terug naar lesprogramma
         </Link>

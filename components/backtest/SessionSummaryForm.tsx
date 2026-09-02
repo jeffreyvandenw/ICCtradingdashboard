@@ -26,12 +26,12 @@ export function SessionSummaryForm({
   }
 
   return (
-    <div className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-      <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-400">
+    <div className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4">
+      <label className="block text-xs font-medium text-neutral-600">
         Samenvatting achteraf
         <textarea
           rows={3}
-          className="mt-1 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+          className="mt-1 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm"
           value={summary}
           onChange={(e) => {
             setSummary(e.target.value);
@@ -44,7 +44,7 @@ export function SessionSummaryForm({
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200"
+          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 disabled:opacity-50"
         >
           {saving ? "Opslaan..." : "Samenvatting opslaan"}
         </button>

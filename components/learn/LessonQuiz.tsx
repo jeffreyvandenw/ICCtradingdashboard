@@ -34,20 +34,20 @@ export function LessonQuiz({
   const allAnswered = quiz.questions.every((_, i) => answers[i] != null);
 
   return (
-    <div className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+    <div className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4">
+      <p className="text-sm font-medium text-neutral-900">
         Quiz
       </p>
       {quiz.questions.map((q, qIndex) => (
         <div key={qIndex} className="space-y-1">
-          <p className="text-sm text-neutral-700 dark:text-neutral-300">
+          <p className="text-sm text-neutral-700">
             {qIndex + 1}. {q.question}
           </p>
           <div className="space-y-1 pl-2">
             {q.options.map((option, oIndex) => (
               <label
                 key={oIndex}
-                className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400"
+                className="flex items-center gap-2 text-sm text-neutral-600"
               >
                 <input
                   type="radio"
@@ -68,7 +68,7 @@ export function LessonQuiz({
         type="button"
         onClick={handleSubmit}
         disabled={!allAnswered || submitting}
-        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
+        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
       >
         {submitting ? "Controleren..." : "Quiz controleren"}
       </button>

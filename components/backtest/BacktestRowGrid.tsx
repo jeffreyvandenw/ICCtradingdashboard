@@ -108,16 +108,16 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
   }
 
   const inputClass =
-    "w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800";
+    "w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm";
   const labelClass =
-    "block text-xs font-medium text-neutral-600 dark:text-neutral-400";
+    "block text-xs font-medium text-neutral-600";
 
   return (
     <div className="space-y-3">
       {rows.map((row) => (
         <div
           key={row.key}
-          className="space-y-3 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+          className="space-y-3 rounded-lg border border-neutral-200 bg-white p-4"
         >
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
             <label className={labelClass}>
@@ -270,7 +270,7 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
               type="button"
               disabled={row.saving || !row.pair || !row.entry}
               onClick={() => saveRow(row)}
-              className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
+              className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
             >
               {row.saving ? "Opslaan..." : "Rij opslaan"}
             </button>
@@ -290,7 +290,7 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
       <button
         type="button"
         onClick={addRow}
-        className="rounded-md border border-dashed border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+        className="rounded-md border border-dashed border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100"
       >
         + Nieuwe rij
       </button>

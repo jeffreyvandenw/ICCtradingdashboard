@@ -39,11 +39,11 @@ export function TradeList({
       {trades.map((trade) => (
         <li
           key={trade.id}
-          className="rounded-lg border border-neutral-200 bg-white p-3 text-sm dark:border-neutral-800 dark:bg-neutral-900"
+          className="rounded-lg border border-neutral-200 bg-white p-3 text-sm"
         >
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="font-medium text-neutral-900 dark:text-neutral-100">
+              <p className="font-medium text-neutral-900">
                 {trade.pair} &middot;{" "}
                 {trade.direction === "long" ? "Long" : "Short"}
                 {trade.outcome && ` · ${OUTCOME_LABEL[trade.outcome]}`}

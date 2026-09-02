@@ -17,12 +17,12 @@ export default async function DayPage({
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+        <h1 className="text-xl font-semibold text-neutral-900">
           {format(day, "EEEE d MMMM yyyy")}
         </h1>
         <Link
           href="/"
-          className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          className="text-sm text-neutral-500 hover:text-neutral-900"
         >
           &larr; Terug naar dashboard
         </Link>

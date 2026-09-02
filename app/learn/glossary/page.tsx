@@ -8,12 +8,12 @@ export default async function GlossaryPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+        <h1 className="text-xl font-semibold text-neutral-900">
           Begrippenlijst
         </h1>
         <Link
           href="/learn"
-          className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          className="text-sm text-neutral-500 hover:text-neutral-900"
         >
           &larr; Lesprogramma
         </Link>

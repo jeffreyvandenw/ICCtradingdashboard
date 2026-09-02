@@ -31,15 +31,15 @@ export default async function BacktestOverviewPage({
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 px-4 py-6">
-      <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+      <h1 className="text-xl font-semibold text-neutral-900">
         Backtesten
       </h1>
 
       <NewSessionForm defaultHypothesis={hypothesis} lessonId={lessonId} />
 
-      <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800">
+      <div className="overflow-x-auto rounded-lg border border-neutral-200">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="bg-neutral-50 text-xs text-neutral-500 dark:bg-neutral-900">
+          <thead className="bg-neutral-50 text-xs text-neutral-500">
             <tr>
               <th className="px-3 py-2">Datum</th>
               <th className="px-3 py-2">Hypothese</th>
@@ -59,12 +59,12 @@ export default async function BacktestOverviewPage({
               return (
                 <tr
                   key={session.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
+                  className="border-t border-neutral-200"
                 >
                   <td className="px-3 py-2 whitespace-nowrap">
                     {format(session.createdAt, "d MMM yyyy")}
                     {session.id === activeSessionId && (
-                      <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200">
+                      <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-800">
                         actief
                       </span>
                     )}

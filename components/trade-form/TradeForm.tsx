@@ -108,13 +108,13 @@ export function TradeForm({
   }
 
   const inputClass =
-    "mt-1 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800";
-  const labelClass = "block text-xs font-medium text-neutral-600 dark:text-neutral-400";
+    "mt-1 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm";
+  const labelClass = "block text-xs font-medium text-neutral-600";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-3 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+      className="space-y-3 rounded-lg border border-neutral-200 bg-white p-4"
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <label className={labelClass}>
@@ -302,7 +302,7 @@ export function TradeForm({
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
+        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
       >
         {submitting ? "Opslaan..." : "Trade toevoegen"}
       </button>

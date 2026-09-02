@@ -19,7 +19,7 @@ export function ScreenshotPreview({ url }: { url: string }) {
   return (
     <iframe
       src={embedUrl}
-      className="aspect-video w-full max-w-sm rounded-md border border-neutral-200 dark:border-neutral-800"
+      className="aspect-video w-full max-w-sm rounded-md border border-neutral-200"
       allow="autoplay"
     />
   );
