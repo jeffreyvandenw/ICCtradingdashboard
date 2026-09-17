@@ -18,6 +18,17 @@ export interface LessonModule {
   lessons: Lesson[];
 }
 
+/**
+ * For lessons without a playlist id in their videoRef (e.g. individually
+ * linked videos rather than a full playlist), fall back to the title's
+ * "<prefix> — ..." convention so lessons from the same source still group
+ * together instead of all landing in one generic bucket.
+ */
+function titlePrefixKey(title: string): string | null {
+  const dashIndex = title.indexOf(" — ");
+  return dashIndex === -1 ? null : title.slice(0, dashIndex);
+}
+
 /** Groups lessons by the YouTube playlist their video belongs to. */
 export function groupLessonsByModule(lessons: Lesson[]): LessonModule[] {
   const groups = new Map<string, LessonModule>();
@@ -26,10 +37,12 @@ export function groupLessonsByModule(lessons: Lesson[]): LessonModule[] {
     const playlistId = lesson.videoRef
       ? extractYoutubePlaylistId(lesson.videoRef)
       : null;
-    const key = playlistId ?? "overig";
+    const titlePrefix = titlePrefixKey(lesson.title);
+
+    const key = playlistId ?? titlePrefix ?? "overig";
     const label = playlistId
       ? (PLAYLIST_LABELS[playlistId] ?? `Playlist ${playlistId}`)
-      : "Overig";
+      : (titlePrefix ?? "Overig");
 
     const group = groups.get(key);
     if (group) {

@@ -5,6 +5,7 @@ import { calculateRR } from "../lib/rr";
 import type { Direction } from "../lib/rr";
 import { seedLessons as seedSciTrendsLessons } from "./seed-data/sci-trends-lessons";
 import { seedLessons as seedBestSimplePriceActionLessons } from "./seed-data/best-simple-price-action-lessons";
+import { seedLessons as seedKoddzTradeBreakdowns } from "./seed-data/koddz-trade-breakdowns";
 
 const PAIRS = ["EURUSD", "GBPUSD", "XAUUSD", "US30", "NAS100"];
 const SESSIONS = ["london", "ny", "asia"] as const;
@@ -189,6 +190,7 @@ async function seed() {
   await seedBacktestSessions();
   await seedSciTrendsLessons();
   await seedBestSimplePriceActionLessons();
+  await seedKoddzTradeBreakdowns();
   await seedGlossary();
   process.exit(0);
 }
