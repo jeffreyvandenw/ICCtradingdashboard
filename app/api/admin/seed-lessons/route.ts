@@ -1,7 +1,14 @@
+import { like } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { lessons } from "@/lib/db/schema";
-import { seedLessons } from "@/scripts/seed-data/sci-trends-lessons";
+import { seedLessons as seedSciTrendsLessons } from "@/scripts/seed-data/sci-trends-lessons";
+import { seedLessons as seedBestSimplePriceActionLessons } from "@/scripts/seed-data/best-simple-price-action-lessons";
+
+const LESSON_SETS = [
+  { titlePrefix: "SCI — Les", seed: seedSciTrendsLessons },
+  { titlePrefix: "Price Action — Les", seed: seedBestSimplePriceActionLessons },
+];
 
 export async function GET() {
   const session = await auth();
@@ -11,15 +18,21 @@ export async function GET() {
     });
   }
 
-  const existing = await db.select({ id: lessons.id }).from(lessons);
-  if (existing.length > 0) {
-    return new Response(
-      `Er staan al ${existing.length} les(sen) in de database — niets gedaan om duplicaten te voorkomen.`,
-    );
+  const results: string[] = [];
+  for (const set of LESSON_SETS) {
+    const existing = await db
+      .select({ id: lessons.id })
+      .from(lessons)
+      .where(like(lessons.title, `${set.titlePrefix}%`));
+
+    if (existing.length > 0) {
+      results.push(`${set.titlePrefix}: al aanwezig (${existing.length} lessen), overgeslagen.`);
+      continue;
+    }
+
+    await set.seed();
+    results.push(`${set.titlePrefix}: toegevoegd.`);
   }
 
-  await seedLessons();
-  return new Response(
-    "6 SCI-lessen toegevoegd. Ga naar /learn om ze te bekijken.",
-  );
+  return new Response(results.join("\n") + "\n\nGa naar /learn om de lessen te bekijken.");
 }

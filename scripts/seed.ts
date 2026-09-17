@@ -3,7 +3,8 @@ import { db } from "../lib/db";
 import { backtestSessions, glossaryTerms, trades } from "../lib/db/schema";
 import { calculateRR } from "../lib/rr";
 import type { Direction } from "../lib/rr";
-import { seedLessons } from "./seed-data/sci-trends-lessons";
+import { seedLessons as seedSciTrendsLessons } from "./seed-data/sci-trends-lessons";
+import { seedLessons as seedBestSimplePriceActionLessons } from "./seed-data/best-simple-price-action-lessons";
 
 const PAIRS = ["EURUSD", "GBPUSD", "XAUUSD", "US30", "NAS100"];
 const SESSIONS = ["london", "ny", "asia"] as const;
@@ -186,7 +187,8 @@ async function seed() {
   console.log("Seeding dummy data...");
   await seedLiveTrades();
   await seedBacktestSessions();
-  await seedLessons();
+  await seedSciTrendsLessons();
+  await seedBestSimplePriceActionLessons();
   await seedGlossary();
   process.exit(0);
 }
