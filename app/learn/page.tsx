@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { getLessons } from "@/lib/lessons";
+import { groupLessonsByModule } from "@/lib/learn-modules";
+import { ModuleList } from "@/components/learn/ModuleList";
 
 export default async function LearnPage() {
   const lessons = await getLessons();
+  const modules = groupLessonsByModule(lessons);
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-6">
@@ -26,37 +29,11 @@ export default async function LearnPage() {
         </div>
       </div>
 
-      <ol className="space-y-2">
-        {lessons.map((lesson, index) => (
-          <li key={lesson.id}>
-            <Link
-              href={`/learn/${lesson.id}`}
-              className="flex items-center justify-between rounded-lg border border-neutral-200 bg-white p-3 text-sm hover:bg-neutral-50"
-            >
-              <span className="font-medium text-neutral-900">
-                {index + 1}. {lesson.title}
-              </span>
-              <span className="flex items-center gap-2 text-xs text-neutral-500">
-                {lesson.quizScore != null && `Score: ${lesson.quizScore}%`}
-                {lesson.completed ? (
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-800">
-                    Afgerond
-                  </span>
-                ) : (
-                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-neutral-500">
-                    Nog niet afgerond
-                  </span>
-                )}
-              </span>
-            </Link>
-          </li>
-        ))}
-        {lessons.length === 0 && (
-          <p className="text-sm text-neutral-400">
-            Nog geen lessen toegevoegd.
-          </p>
-        )}
-      </ol>
+      {modules.length > 0 ? (
+        <ModuleList modules={modules} />
+      ) : (
+        <p className="text-sm text-neutral-400">Nog geen lessen toegevoegd.</p>
+      )}
     </div>
   );
 }
