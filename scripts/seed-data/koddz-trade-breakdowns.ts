@@ -571,7 +571,7 @@ export async function seedLessons() {
     },
     {
       title: "Koddz — Trade 11: Silver — swingtrade op een higher low na een scherpe daling",
-      videoRef: null,
+      videoRef: "https://youtu.be/F-R8wZdi1FQ",
       content:
         "- Na een scherpe daling vormde zich een support met een higher low (in plaats van een verwachte lower low) — dat higher low was het eerste teken dat kopers terugkwamen.\n" +
         "- Als swingtrade werd deze positie over een langere periode aangehouden, met tussentijdse targets die werden verschoven zodra eerdere niveaus braken (voortschrijdend TP-beleid).\n" +
