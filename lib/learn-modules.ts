@@ -10,6 +10,7 @@ import { extractYoutubePlaylistId } from "./youtube";
 const PLAYLIST_LABELS: Record<string, string> = {
   PLmaCbAD6I1AwZRrgd1TJ_T4Mnx0fKc33h: "SCI — Trends & Market Structure",
   PLmaCbAD6I1AyI7jO4SiM38hgc2pWgFOG_: "Best Simple Price Action Trading Course",
+  PLguWwLNVYKWdw0qsZWLLzwJlw6sWKUsjI: "JaeFX — Mastering Liquidity",
 };
 
 export interface LessonModule {

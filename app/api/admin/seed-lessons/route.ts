@@ -5,11 +5,13 @@ import { lessons } from "@/lib/db/schema";
 import { seedLessons as seedSciTrendsLessons } from "@/scripts/seed-data/sci-trends-lessons";
 import { seedLessons as seedBestSimplePriceActionLessons } from "@/scripts/seed-data/best-simple-price-action-lessons";
 import { seedLessons as seedKoddzTradeBreakdowns } from "@/scripts/seed-data/koddz-trade-breakdowns";
+import { seedLessons as seedJaeFxMasteringLiquidity } from "@/scripts/seed-data/jaefx-mastering-liquidity";
 
 const LESSON_SETS = [
   { titlePrefix: "SCI — Les", seed: seedSciTrendsLessons },
   { titlePrefix: "Price Action — Les", seed: seedBestSimplePriceActionLessons },
   { titlePrefix: "Koddz — Trade", seed: seedKoddzTradeBreakdowns },
+  { titlePrefix: "JaeFX — Liquidity", seed: seedJaeFxMasteringLiquidity },
 ];
 
 export async function GET() {
