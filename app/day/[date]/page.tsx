@@ -21,10 +21,10 @@ export default async function DayPage({
           {format(day, "EEEE d MMMM yyyy")}
         </h1>
         <Link
-          href="/"
+          href="/trading"
           className="text-sm text-neutral-500 hover:text-neutral-900"
         >
-          &larr; Terug naar dashboard
+          &larr; Terug naar trading
         </Link>
       </div>
 

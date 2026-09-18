@@ -94,6 +94,71 @@ export const glossaryTerms = pgTable("glossary_terms", {
   definition: text("definition").notNull(),
 });
 
+export const todoPriorityEnum = pgEnum("todo_priority", [
+  "low",
+  "medium",
+  "high",
+]);
+
+export const todos = pgTable("todos", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  notes: text("notes"),
+  done: boolean("done").notNull().default(false),
+  priority: todoPriorityEnum("priority").notNull().default("medium"),
+  dueDate: timestamp("due_date", { withTimezone: true }),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const bookStatusEnum = pgEnum("book_status", [
+  "to_read",
+  "reading",
+  "read",
+]);
+
+export const books = pgTable("books", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  isbn: text("isbn"),
+  title: text("title").notNull(),
+  author: text("author"),
+  coverUrl: text("cover_url"),
+  pageCount: integer("page_count"),
+  status: bookStatusEnum("status").notNull().default("to_read"),
+  rating: integer("rating"),
+  notes: text("notes"),
+  startedAt: timestamp("started_at", { withTimezone: true }),
+  finishedAt: timestamp("finished_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const recipeSourceEnum = pgEnum("recipe_source", [
+  "youtube",
+  "tiktok",
+  "other",
+]);
+
+export const recipes = pgTable("recipes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  sourceUrl: text("source_url"),
+  sourcePlatform: recipeSourceEnum("source_platform")
+    .notNull()
+    .default("other"),
+  embedUrl: text("embed_url"),
+  ingredients: text("ingredients").array().notNull().default([]),
+  steps: text("steps").array().notNull().default([]),
+  tags: text("tags").array().notNull().default([]),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export const tradesRelations = relations(trades, ({ one }) => ({
   backtestSession: one(backtestSessions, {
     fields: [trades.backtestSessionId],
@@ -129,3 +194,9 @@ export type NewBacktestSession = typeof backtestSessions.$inferInsert;
 export type Lesson = typeof lessons.$inferSelect;
 export type NewLesson = typeof lessons.$inferInsert;
 export type GlossaryTerm = typeof glossaryTerms.$inferSelect;
+export type Todo = typeof todos.$inferSelect;
+export type NewTodo = typeof todos.$inferInsert;
+export type Book = typeof books.$inferSelect;
+export type NewBook = typeof books.$inferInsert;
+export type Recipe = typeof recipes.$inferSelect;
+export type NewRecipe = typeof recipes.$inferInsert;
