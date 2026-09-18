@@ -4,8 +4,8 @@ import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 
 export const metadata: Metadata = {
-  title: "Trading Journal",
-  description: "Persoonlijk trading journal voor de ICC-strategie",
+  title: "ICC Hub",
+  description: "Persoonlijke hub voor trading, to-do's, boeken en recepten",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

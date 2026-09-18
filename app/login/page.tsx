@@ -42,7 +42,7 @@ export default function LoginPage() {
       >
         <div>
           <h1 className="text-lg font-semibold text-neutral-900">
-            Trading Journal
+            ICC Hub
           </h1>
           <p className="text-sm text-neutral-500">Log in om verder te gaan</p>
         </div>

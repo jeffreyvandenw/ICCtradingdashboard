@@ -64,3 +64,47 @@ export const glossaryTermFormSchema = z.object({
   term: z.string().min(1, "Term is verplicht"),
   definition: z.string().min(1, "Definitie is verplicht"),
 });
+
+export const todoFormSchema = z.object({
+  title: z.string().min(1, "Titel is verplicht"),
+  notes: z.string().nullable().optional(),
+  priority: z.enum(["low", "medium", "high"]).default("medium"),
+  dueDate: z.coerce.date().nullable().optional(),
+});
+
+export type TodoFormValues = z.infer<typeof todoFormSchema>;
+
+export const bookFormSchema = z.object({
+  isbn: z.string().nullable().optional(),
+  title: z.string().min(1, "Titel is verplicht"),
+  author: z.string().nullable().optional(),
+  coverUrl: z.string().url().nullable().optional().or(z.literal("")),
+  pageCount: z.coerce.number().int().positive().nullable().optional(),
+  status: z.enum(["to_read", "reading", "read"]).default("to_read"),
+  rating: z.coerce.number().int().min(1).max(5).nullable().optional(),
+  notes: z.string().nullable().optional(),
+  startedAt: z.coerce.date().nullable().optional(),
+  finishedAt: z.coerce.date().nullable().optional(),
+});
+
+export type BookFormValues = z.infer<typeof bookFormSchema>;
+
+export const recipeFormSchema = z.object({
+  title: z.string().min(1, "Titel is verplicht"),
+  sourceUrl: z.string().url().nullable().optional().or(z.literal("")),
+  sourcePlatform: z.enum(["youtube", "tiktok", "other"]).default("other"),
+  embedUrl: z.string().nullable().optional(),
+  ingredients: z.array(z.string().min(1)).default([]),
+  steps: z.array(z.string().min(1)).default([]),
+  tags: z.array(z.string().min(1)).default([]),
+  notes: z.string().nullable().optional(),
+});
+
+export type RecipeFormValues = z.infer<typeof recipeFormSchema>;
+
+export const recipeTranscriptSchema = z.object({
+  sourceUrl: z.string().url("Vul een geldige video-link in"),
+  transcript: z.string().min(20, "Plak het transcript van de video"),
+});
+
+export type RecipeTranscriptValues = z.infer<typeof recipeTranscriptSchema>;

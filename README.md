@@ -1,8 +1,9 @@
-# ICC Trading Journal
+# ICC Hub
 
-Persoonlijk trading journal, backtest-omgeving en leeromgeving voor de ICC-strategie
-(Indication-Correction-Continuation). Alle drie de modules (dashboard/live journal,
-leren, backtesten) zijn gebouwd.
+Persoonlijke alles-in-één hub: trading journal, backtest-omgeving en leeromgeving
+voor de ICC-strategie (Indication-Correction-Continuation), plus een to-do-lijst,
+boekenlijst en receptenlijst. De landingspagina (`/`) is een overzicht met een
+kaart per module; elke module heeft daarnaast zijn eigen volledige pagina.
 
 ## Stack
 
@@ -11,6 +12,8 @@ leren, backtesten) zijn gebouwd.
 - Drizzle ORM + drizzle-kit for schema/migrations
 - NextAuth (Credentials provider) for a single-user login
 - Tailwind CSS, Recharts
+- Anthropic SDK (`@anthropic-ai/sdk`) — used to turn a pasted video transcript
+  into a structured recipe (module 6)
 
 ## Local development
 
@@ -27,6 +30,9 @@ leren, backtesten) zijn gebouwd.
    - `AUTH_SECRET` — generate with `openssl rand -base64 32`
    - `AUTH_USER_EMAIL` / `AUTH_USER_PASSWORD_HASH` — your login. Generate the
      hash with `npx tsx scripts/hash-password.ts <your-password>`.
+   - `ANTHROPIC_API_KEY` — optional, only needed for "Genereer recept met
+     Claude" on `/recipes/new`. Get one at https://console.anthropic.com.
+     Without it, recipes can still be added by filling in the fields by hand.
 
    Note: bcrypt hashes contain `$` characters, which Next.js's `.env` loader
    treats as variable references. Escape every `$` as `\$` in the file (the
@@ -48,7 +54,14 @@ leren, backtesten) zijn gebouwd.
 
 ## Modules
 
-### Module 1 — Dashboard & live journal (`/`, `/day/[date]`)
+### Hub (`/`)
+
+Landing page after login. One card per module (trading net R/winrate, open
+to-do count, currently-reading book, latest recipe), each linking through to
+its full page. This replaces the old behaviour where `/` was the trading
+dashboard directly.
+
+### Module 1 — Trading journal (`/trading`, `/day/[date]`)
 
 Monthly calendar (color-coded by daily net R), stats scoped to `type = "live"`
 trades only (avg RR, winrate, trades/week, profit factor, expectancy, equity
@@ -91,11 +104,44 @@ dashboard) and the session's trades.
 - Screenshot links (Google Drive) render as an embedded `/preview` iframe via
   `lib/drive.ts` + `ScreenshotPreview`, both here and in module 1's trade list.
 
+### Module 4 — To-do's (`/todos`)
+
+Flat personal to-do list: title, priority (low/medium/high), optional due
+date, done/open split. No projects/tags — deliberately simple.
+
+### Module 5 — Boeken (`/books`, `/books/new`, `/books/[id]/edit`)
+
+Book tracker with status (te lezen / bezig / gelezen) and a 1-5 rating.
+**ISBN lookup**: typing an ISBN and clicking "Opzoeken" calls the free
+[Open Library API](https://openlibrary.org/dev/docs/api/books) (no API key,
+no self-hosted book database) to prefill title, author, cover and page count
+— you can still edit or override every field before saving.
+
+### Module 6 — Recepten (`/recipes`, `/recipes/new`, `/recipes/[id]`)
+
+Recipes built from a video link + its transcript, so saving a recipe you saw
+on YouTube/TikTok takes seconds instead of retyping it by hand:
+
+1. Paste the video URL and the transcript (YouTube: copy the transcript from
+   the video's "..." menu; TikTok has no public transcript API, so paste its
+   auto-captions or your own notes instead).
+2. "Genereer recept met Claude" (`lib/recipe-ai.ts`) sends the transcript to
+   the Anthropic API and gets back a structured title/ingredients/steps/tags
+   via tool use — nothing is invented that isn't in the transcript.
+3. Everything is editable before saving, so a bad or partial extraction is a
+   quick fix, not a re-do.
+
+The video itself is embedded on the recipe detail page (YouTube `/embed/` or
+TikTok `/embed/v2/`, via `lib/video-embed.ts`); unrecognized links fall back
+to a "Bekijk video →" link.
+
 ## Data model
 
 One `trades` table backs both live and backtest trades (`type: "live" | "backtest"`).
-The dashboard only ever reads `type = "live"`. Backtest trades link to a
-`backtest_sessions` row. `lessons` and `glossary_terms` back module 2.
+The trading journal only ever reads `type = "live"`. Backtest trades link to a
+`backtest_sessions` row. `lessons` and `glossary_terms` back module 2. `todos`,
+`books` and `recipes` are independent flat tables — no relations to trades or
+to each other.
 
 RR is auto-calculated from entry/stop-loss/take-profit (direction-aware) but is
 a plain editable field, so you can override it. For stats (equity curve,

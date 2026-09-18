@@ -88,6 +88,7 @@ export async function createTrade(input: unknown) {
     .returning();
 
   revalidatePath("/");
+  revalidatePath("/trading");
   revalidatePath("/day/[date]", "page");
   return created;
 }
@@ -101,6 +102,7 @@ export async function updateTrade(id: string, input: unknown) {
     .returning();
 
   revalidatePath("/");
+  revalidatePath("/trading");
   revalidatePath("/day/[date]", "page");
   return updated;
 }
@@ -108,5 +110,6 @@ export async function updateTrade(id: string, input: unknown) {
 export async function deleteTrade(id: string) {
   await db.delete(trades).where(eq(trades.id, id));
   revalidatePath("/");
+  revalidatePath("/trading");
   revalidatePath("/day/[date]", "page");
 }

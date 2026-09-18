@@ -17,18 +17,23 @@ export interface DayResult {
 interface MonthCalendarProps {
   monthDate: Date;
   dailyResults: Map<string, DayResult>;
+  basePath?: string;
 }
 
 const WEEKDAY_LABELS = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
 
-export function MonthCalendar({ monthDate, dailyResults }: MonthCalendarProps) {
+export function MonthCalendar({
+  monthDate,
+  dailyResults,
+  basePath = "/trading",
+}: MonthCalendarProps) {
   const days = getCalendarGrid(monthDate);
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <Link
-          href={`/?month=${previousMonthParam(monthDate)}`}
+          href={`${basePath}?month=${previousMonthParam(monthDate)}`}
           className="rounded-md px-2 py-1 text-sm text-slate-500 hover:bg-slate-100"
         >
           &larr;
@@ -37,7 +42,7 @@ export function MonthCalendar({ monthDate, dailyResults }: MonthCalendarProps) {
           {format(monthDate, "MMMM yyyy")}
         </h2>
         <Link
-          href={`/?month=${nextMonthParam(monthDate)}`}
+          href={`${basePath}?month=${nextMonthParam(monthDate)}`}
           className="rounded-md px-2 py-1 text-sm text-slate-500 hover:bg-slate-100"
         >
           &rarr;

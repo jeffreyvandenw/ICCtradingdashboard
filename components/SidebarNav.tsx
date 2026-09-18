@@ -28,6 +28,21 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
+    href: "/trading",
+    label: "Trading",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="none" className="h-4.5 w-4.5">
+        <path
+          d="M3 15.5 8 10l3 3 6-7"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
     href: "/backtest",
     label: "Backtesten",
     icon: (
@@ -50,6 +65,50 @@ const NAV_ITEMS: NavItem[] = [
           d="M3.5 5.5c1.8-1 4-1 5.5.3v9c-1.5-1.3-3.7-1.3-5.5-.3v-9ZM16.5 5.5c-1.8-1-4-1-5.5.3v9c1.5-1.3 3.7-1.3 5.5-.3v-9Z"
           stroke="currentColor"
           strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    href: "/todos",
+    label: "To-do's",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="none" className="h-4.5 w-4.5">
+        <path
+          d="m4 10 3 3 9-9M4 16.5h9"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    href: "/books",
+    label: "Boeken",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="none" className="h-4.5 w-4.5">
+        <path
+          d="M4 4.5h5a2 2 0 0 1 2 2v9a1.5 1.5 0 0 0-1.5-1.5H4v-9.5ZM16 4.5h-5a2 2 0 0 0-2 2v9a1.5 1.5 0 0 1 1.5-1.5H16v-9.5Z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    href: "/recipes",
+    label: "Recepten",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="none" className="h-4.5 w-4.5">
+        <path
+          d="M5 8.5h10a1 1 0 0 1 1 1c0 3.5-2.5 6-6 6s-6-2.5-6-6a1 1 0 0 1 1-1ZM7 8.5V5m3 3.5V4m3 4.5V5.5"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>

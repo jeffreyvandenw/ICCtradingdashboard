@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { auth } from "@/auth";
-import { formatDayParam } from "@/lib/date";
+import { TopbarQuickAdd } from "@/components/TopbarQuickAdd";
 
 export async function Topbar() {
   const session = await auth();
@@ -15,12 +14,7 @@ export async function Topbar() {
       <p className="text-sm text-slate-500">
         {format(today, "EEEE d MMMM yyyy", { locale: nl })}
       </p>
-      <Link
-        href={`/day/${formatDayParam(today)}`}
-        className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
-      >
-        + Trade toevoegen
-      </Link>
+      <TopbarQuickAdd />
     </header>
   );
 }

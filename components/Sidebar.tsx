@@ -9,7 +9,7 @@ export async function Sidebar() {
     <aside className="flex w-56 shrink-0 flex-col border-r border-slate-200 bg-white">
       <div className="flex h-14 items-center border-b border-slate-200 px-4">
         <span className="text-sm font-semibold tracking-tight text-slate-900">
-          ICC Journal
+          ICC Hub
         </span>
       </div>
 
