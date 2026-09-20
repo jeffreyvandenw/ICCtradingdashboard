@@ -6,7 +6,7 @@ export async function Sidebar() {
   if (!session) return null;
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-slate-200 bg-white">
+    <aside className="flex h-full w-56 shrink-0 flex-col border-r border-slate-200 bg-white">
       <div className="flex h-14 items-center border-b border-slate-200 px-4">
         <span className="text-sm font-semibold tracking-tight text-slate-900">
           ICC Hub

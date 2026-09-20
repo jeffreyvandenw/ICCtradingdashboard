@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
@@ -133,6 +134,13 @@ const NAV_ITEMS: NavItem[] = [
 
 export function SidebarNav() {
   const pathname = usePathname();
+
+  useEffect(() => {
+    const toggle = document.getElementById(
+      "nav-toggle",
+    ) as HTMLInputElement | null;
+    if (toggle) toggle.checked = false;
+  }, [pathname]);
 
   return (
     <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
