@@ -3,6 +3,7 @@ import {
   uuid,
   text,
   timestamp,
+  date,
   doublePrecision,
   pgEnum,
   jsonb,
@@ -136,6 +137,17 @@ export const books = pgTable("books", {
     .defaultNow(),
 });
 
+export const checkIns = pgTable("check_ins", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  day: date("day", { mode: "string" }).notNull().unique(),
+  didYesterday: boolean("did_yesterday").notNull(),
+  confidentToday: boolean("confident_today").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export const recipeSourceEnum = pgEnum("recipe_source", [
   "youtube",
   "tiktok",
@@ -200,3 +212,5 @@ export type Book = typeof books.$inferSelect;
 export type NewBook = typeof books.$inferInsert;
 export type Recipe = typeof recipes.$inferSelect;
 export type NewRecipe = typeof recipes.$inferInsert;
+export type CheckIn = typeof checkIns.$inferSelect;
+export type NewCheckIn = typeof checkIns.$inferInsert;

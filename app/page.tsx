@@ -5,7 +5,9 @@ import { computeDashboardStats } from "@/lib/stats";
 import { getOpenTodos } from "@/lib/todos";
 import { getCurrentlyReading } from "@/lib/books";
 import { getLatestRecipe } from "@/lib/recipes";
+import { getCheckInStreak, getTodayCheckIn } from "@/lib/checkins";
 import { HubCard } from "@/components/dashboard/HubCard";
+import { DailyCheckIn } from "@/components/checkin/DailyCheckIn";
 import { cn } from "@/lib/utils";
 
 function fmtR(value: number): string {
@@ -13,13 +15,21 @@ function fmtR(value: number): string {
 }
 
 export default async function HubPage() {
-  const [liveTrades, openTodos, readingBooks, latestRecipe] =
-    await Promise.all([
-      getAllLiveTrades(),
-      getOpenTodos(4),
-      getCurrentlyReading(3),
-      getLatestRecipe(),
-    ]);
+  const [
+    liveTrades,
+    openTodos,
+    readingBooks,
+    latestRecipe,
+    todayCheckIn,
+    streak,
+  ] = await Promise.all([
+    getAllLiveTrades(),
+    getOpenTodos(4),
+    getCurrentlyReading(3),
+    getLatestRecipe(),
+    getTodayCheckIn(),
+    getCheckInStreak(),
+  ]);
 
   const stats = computeDashboardStats(liveTrades);
 
@@ -33,6 +43,8 @@ export default async function HubPage() {
           Alles in één overzicht.
         </p>
       </div>
+
+      <DailyCheckIn todayCheckIn={todayCheckIn} streak={streak} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <HubCard href="/trading" title="Trading" accent="indigo">
