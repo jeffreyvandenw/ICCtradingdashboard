@@ -28,6 +28,21 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
+    href: "/checkin",
+    label: "Check-in",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="none" className="h-4.5 w-4.5">
+        <path
+          d="M4 10.5 8 14l8-8"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
     href: "/trading",
     label: "Trading",
     icon: (

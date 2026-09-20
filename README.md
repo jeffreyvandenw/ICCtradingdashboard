@@ -56,10 +56,27 @@ kaart per module; elke module heeft daarnaast zijn eigen volledige pagina.
 
 ### Hub (`/`)
 
-Landing page after login. One card per module (trading net R/winrate, open
-to-do count, currently-reading book, latest recipe), each linking through to
-its full page. This replaces the old behaviour where `/` was the trading
-dashboard directly.
+Landing page after login. Daily check-in widget at the top (see Module 7),
+then one card per module (trading net R/winrate, open to-do count,
+currently-reading book, latest recipe), each linking through to its full
+page. This replaces the old behaviour where `/` was the trading dashboard
+directly.
+
+### Module 7 — Dagelijkse check-in (`/checkin`)
+
+Three questions on the hub, once a day: did you do yesterday what you said
+you would, do you trust yourself to do today what's needed, and anything
+else on your mind. One row per calendar day (`check_ins.day`, unique) —
+submitting is a one-way action, there's no edit route.
+
+`/checkin` shows a read-only monthly calendar plus that month's answers:
+- **Green** = filled in that day. **Red** = missed (in the past, on/after
+  the first-ever check-in). **Neutral/gray** = today (still open, doesn't
+  turn red until the day is over), a future day, or a day before the habit
+  started — nothing to hold you accountable for before the feature existed.
+- The streak on the hub (`lib/checkins.ts#getCheckInStreak`) counts backward
+  from today if today's filled in, otherwise from yesterday — so an
+  unfilled "today" doesn't break the streak until the day actually passes.
 
 ### Module 1 — Trading journal (`/trading`, `/day/[date]`)
 

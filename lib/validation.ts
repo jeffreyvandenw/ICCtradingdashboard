@@ -108,3 +108,11 @@ export const recipeTranscriptSchema = z.object({
 });
 
 export type RecipeTranscriptValues = z.infer<typeof recipeTranscriptSchema>;
+
+export const checkInFormSchema = z.object({
+  didYesterday: z.boolean(),
+  confidentToday: z.boolean(),
+  notes: z.string().nullable().optional(),
+});
+
+export type CheckInFormValues = z.infer<typeof checkInFormSchema>;

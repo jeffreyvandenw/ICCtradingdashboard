@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
@@ -6,6 +6,14 @@ import { Topbar } from "@/components/Topbar";
 export const metadata: Metadata = {
   title: "ICC Hub",
   description: "Persoonlijke hub voor trading, to-do's, boeken en recepten",
+  appleWebApp: {
+    title: "ICC Hub",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#4f46e5",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

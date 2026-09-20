@@ -22,6 +22,13 @@
       "when": 1789759747056,
       "tag": "0002_add_todos_books_recipes",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789937151453,
+      "tag": "0003_add_check_ins",
+      "breakpoints": true
     }
   ]
 }
