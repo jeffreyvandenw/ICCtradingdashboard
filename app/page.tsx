@@ -44,9 +44,32 @@ export default async function HubPage() {
         </p>
       </div>
 
+      <HubCard href="/todos" title="To-do's" accent="amber">
+        <p className="text-2xl font-semibold text-slate-900">
+          {openTodos.length}
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          {openTodos.length === 0
+            ? "Niks meer te doen"
+            : "openstaande taken"}
+        </p>
+        {openTodos.length > 0 && (
+          <ul className="mt-3 space-y-1">
+            {openTodos.slice(0, 3).map((todo) => (
+              <li
+                key={todo.id}
+                className="truncate text-xs text-slate-600"
+              >
+                • {todo.title}
+              </li>
+            ))}
+          </ul>
+        )}
+      </HubCard>
+
       <DailyCheckIn todayCheckIn={todayCheckIn} streak={streak} />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <HubCard href="/trading" title="Trading" accent="indigo">
           <p
             className={cn(
@@ -63,29 +86,6 @@ export default async function HubPage() {
             {stats.winratePct == null ? "—" : `${stats.winratePct.toFixed(0)}%`}{" "}
             winrate
           </p>
-        </HubCard>
-
-        <HubCard href="/todos" title="To-do's" accent="amber">
-          <p className="text-2xl font-semibold text-slate-900">
-            {openTodos.length}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            {openTodos.length === 0
-              ? "Niks meer te doen"
-              : "openstaande taken"}
-          </p>
-          {openTodos.length > 0 && (
-            <ul className="mt-3 space-y-1">
-              {openTodos.slice(0, 3).map((todo) => (
-                <li
-                  key={todo.id}
-                  className="truncate text-xs text-slate-600"
-                >
-                  • {todo.title}
-                </li>
-              ))}
-            </ul>
-          )}
         </HubCard>
 
         <HubCard href="/books" title="Boeken" accent="emerald">
