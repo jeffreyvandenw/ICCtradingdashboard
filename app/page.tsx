@@ -24,7 +24,7 @@ export default async function HubPage() {
     streak,
   ] = await Promise.all([
     getAllLiveTrades(),
-    getOpenTodos(4),
+    getOpenTodos(),
     getCurrentlyReading(3),
     getLatestRecipe(),
     getTodayCheckIn(),
