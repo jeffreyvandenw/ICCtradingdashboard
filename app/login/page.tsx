@@ -45,6 +45,9 @@ export default function LoginPage() {
             ICC Hub
           </h1>
           <p className="text-sm text-neutral-500">Log in om verder te gaan</p>
+          <p className="mt-1 text-xs text-neutral-400">
+            Dit apparaat blijft 30 dagen ingelogd.
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -52,6 +55,8 @@ export default function LoginPage() {
             E-mail
             <input
               type="email"
+              name="email"
+              autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -62,6 +67,8 @@ export default function LoginPage() {
             Wachtwoord
             <input
               type="password"
+              name="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

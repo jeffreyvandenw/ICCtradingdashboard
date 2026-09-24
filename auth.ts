@@ -2,8 +2,14 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
+// Keep devices signed in for 30 days. The window slides: every visit (at most
+// once a day) pushes the expiry forward, so a device only has to log in again
+// after 30 days without using the app.
+const THIRTY_DAYS = 30 * 24 * 60 * 60;
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: THIRTY_DAYS, updateAge: 24 * 60 * 60 },
+  jwt: { maxAge: THIRTY_DAYS },
   pages: { signIn: "/login" },
   providers: [
     Credentials({
