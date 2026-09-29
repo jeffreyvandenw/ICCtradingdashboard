@@ -171,6 +171,35 @@ export const recipes = pgTable("recipes", {
     .defaultNow(),
 });
 
+// Shops are a table (not an enum) so new ones can be added from the UI.
+export const shops = pgTable("shops", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull().unique(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// A null shopId means "Overal": it can be picked up at any shop.
+// Checked items stay in the table as history for the name suggestions;
+// the list itself hides them 30 minutes after checking them off.
+export const groceryItems = pgTable("grocery_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  quantity: integer("quantity").notNull().default(1),
+  unit: text("unit"),
+  note: text("note"),
+  shopId: uuid("shop_id").references(() => shops.id, {
+    onDelete: "set null",
+  }),
+  done: boolean("done").notNull().default(false),
+  checkedAt: timestamp("checked_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export const tradesRelations = relations(trades, ({ one }) => ({
   backtestSession: one(backtestSessions, {
     fields: [trades.backtestSessionId],
@@ -214,3 +243,5 @@ export type Recipe = typeof recipes.$inferSelect;
 export type NewRecipe = typeof recipes.$inferInsert;
 export type CheckIn = typeof checkIns.$inferSelect;
 export type NewCheckIn = typeof checkIns.$inferInsert;
+export type Shop = typeof shops.$inferSelect;
+export type GroceryItem = typeof groceryItems.$inferSelect;

@@ -152,6 +152,22 @@ The video itself is embedded on the recipe detail page (YouTube `/embed/` or
 TikTok `/embed/v2/`, via `lib/video-embed.ts`); unrecognized links fall back
 to a "Bekijk video →" link.
 
+### Module 8 — Boodschappen (`/boodschappen`)
+
+Shopping list grouped per shop, built for use on a phone in the store. Each
+item has a name, a quantity (default 1), an optional unit and note/link, and
+a shop — or "Overal" when it can be picked up anywhere. Filter chips at the
+top show one shop at a time ("Overal" items stay visible under every
+filter). Tapping an item checks it off: it stays struck through for 30
+minutes and then drops off the list ("Nu wissen" hides them right away).
+Checked items are kept in the database as history, so typing a name you've
+bought before suggests it and preselects the shop you last used for it.
+
+The default shops (Albert Heijn, Jumbo, Action, Gamma, Praxis, Ikea,
+Babydump, Prenatal, Mediamarkt, Bol, Coolblue) are inserted by migration
+`0004_add_groceries`; more can be added from the shop dropdown
+("+ Nieuwe winkel…").
+
 ## Data model
 
 One `trades` table backs both live and backtest trades (`type: "live" | "backtest"`).

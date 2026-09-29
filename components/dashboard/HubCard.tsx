@@ -10,7 +10,7 @@ export function HubCard({
 }: {
   href: string;
   title: string;
-  accent: "indigo" | "emerald" | "amber" | "rose";
+  accent: "indigo" | "emerald" | "amber" | "rose" | "sky";
   children: ReactNode;
 }) {
   const accentClasses: Record<typeof accent, string> = {
@@ -18,6 +18,7 @@ export function HubCard({
     emerald: "bg-emerald-50 text-emerald-600",
     amber: "bg-amber-50 text-amber-600",
     rose: "bg-rose-50 text-rose-600",
+    sky: "bg-sky-50 text-sky-600",
   };
 
   return (

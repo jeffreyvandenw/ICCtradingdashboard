@@ -124,6 +124,26 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    label: "Huishouden",
+    items: [
+      {
+        href: "/boodschappen",
+        label: "Boodschappen",
+        icon: (
+          <svg viewBox="0 0 20 20" fill="none" className="h-4.5 w-4.5">
+            <path
+              d="M2.5 3.5h2l1.8 8.5a1 1 0 0 0 1 .8h7.2a1 1 0 0 0 1-.8l1.2-5.5H5.2M8 16.5h.01M14 16.5h.01"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
     label: "Vrije tijd",
     items: [
       {
