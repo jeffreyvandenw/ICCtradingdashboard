@@ -74,6 +74,18 @@ export const todoFormSchema = z.object({
 
 export type TodoFormValues = z.infer<typeof todoFormSchema>;
 
+export const groceryItemFormSchema = z.object({
+  name: z.string().trim().min(1, "Naam is verplicht"),
+  quantity: z.coerce.number().int().min(1).default(1),
+  unit: z.string().trim().nullable().optional(),
+  note: z.string().trim().nullable().optional(),
+  shopId: z.string().uuid().nullable().optional(),
+});
+
+export const shopFormSchema = z.object({
+  name: z.string().trim().min(1, "Naam is verplicht"),
+});
+
 export const bookFormSchema = z.object({
   isbn: z.string().nullable().optional(),
   title: z.string().min(1, "Titel is verplicht"),

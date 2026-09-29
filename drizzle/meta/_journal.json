@@ -29,6 +29,13 @@
       "when": 1789937151453,
       "tag": "0003_add_check_ins",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790685592387,
+      "tag": "0004_add_groceries",
+      "breakpoints": true
     }
   ]
 }
