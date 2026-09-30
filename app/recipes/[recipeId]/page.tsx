@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getRecipe } from "@/lib/recipes";
-import { VideoEmbed } from "@/components/recipes/VideoEmbed";
+import { VideoLink } from "@/components/recipes/VideoLink";
 
 export default async function RecipeDetailPage({
   params,
@@ -15,11 +15,7 @@ export default async function RecipeDetailPage({
     <div className="mx-auto max-w-2xl space-y-6 px-6 py-6">
       <h1 className="text-xl font-semibold text-slate-900">{recipe.title}</h1>
 
-      <VideoEmbed
-        embedUrl={recipe.embedUrl}
-        sourceUrl={recipe.sourceUrl}
-        title={recipe.title}
-      />
+      <VideoLink embedUrl={recipe.embedUrl} sourceUrl={recipe.sourceUrl} />
 
       {recipe.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5">

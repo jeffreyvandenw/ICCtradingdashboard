@@ -4,7 +4,7 @@ import { getLesson } from "@/lib/lessons";
 import { LessonQuiz } from "@/components/learn/LessonQuiz";
 import { MarkCompleteButton } from "@/components/learn/MarkCompleteButton";
 import { DeleteLessonButton } from "@/components/learn/DeleteLessonButton";
-import { VideoEmbed } from "@/components/learn/VideoEmbed";
+import { VideoLink } from "@/components/learn/VideoLink";
 
 export default async function LessonPage({
   params,
@@ -36,7 +36,7 @@ export default async function LessonPage({
         </div>
       </div>
 
-      {lesson.videoRef && <VideoEmbed url={lesson.videoRef} />}
+      {lesson.videoRef && <VideoLink url={lesson.videoRef} />}
 
       {lesson.content && (
         <div className="whitespace-pre-wrap rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-700">

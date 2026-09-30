@@ -17,3 +17,13 @@ export function extractYoutubePlaylistId(url: string): string | null {
   const match = url.match(/[?&]list=([^&]+)/);
   return match ? match[1] : null;
 }
+
+/**
+ * Turns a YouTube /embed/ URL back into a normal watch URL, so a link opens
+ * the video itself on youtube.com. Other URLs are returned unchanged.
+ */
+export function toYoutubeWatchUrl(url: string): string {
+  const match = url.match(EMBED_ID);
+  if (!match) return url;
+  return `https://www.youtube.com/watch?v=${match[1]}`;
+}
