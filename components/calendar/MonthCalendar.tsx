@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { format, isSameMonth, isToday } from "date-fns";
+import { nl } from "date-fns/locale";
 import {
   dayKey,
   formatDayParam,
@@ -8,10 +9,13 @@ import {
   previousMonthParam,
 } from "@/lib/date";
 import { cn } from "@/lib/utils";
+import { formatMoney } from "@/lib/money";
 
 export interface DayResult {
   count: number;
   netR: number;
+  /** Summed P&L of that day's trades that have one; null when none do. */
+  pnl: number | null;
 }
 
 interface MonthCalendarProps {
@@ -30,7 +34,7 @@ export function MonthCalendar({
   const days = getCalendarGrid(monthDate);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-surface p-4 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <Link
           href={`${basePath}?month=${previousMonthParam(monthDate)}`}
@@ -38,8 +42,8 @@ export function MonthCalendar({
         >
           &larr;
         </Link>
-        <h2 className="text-base font-semibold text-slate-900">
-          {format(monthDate, "MMMM yyyy")}
+        <h2 className="text-base font-semibold text-slate-900 first-letter:uppercase">
+          {format(monthDate, "MMMM yyyy", { locale: nl })}
         </h2>
         <Link
           href={`${basePath}?month=${nextMonthParam(monthDate)}`}
@@ -82,14 +86,19 @@ export function MonthCalendar({
                 "flex aspect-square flex-col items-center justify-center rounded-lg text-sm transition-colors",
                 colorClasses,
                 !inMonth && "opacity-40",
-                isToday(day) && "ring-2 ring-indigo-600",
+                isToday(day) && "ring-2 ring-gold-600",
               )}
             >
               <span className="font-medium">{format(day, "d")}</span>
               {result && result.count > 0 && (
-                <span className="text-[10px]">
+                <span className="text-[10px] leading-tight">
                   {result.count}x &middot; {result.netR > 0 ? "+" : ""}
                   {result.netR.toFixed(1)}R
+                </span>
+              )}
+              {result && result.pnl != null && (
+                <span className="hidden text-[10px] leading-tight font-medium sm:block">
+                  {formatMoney(Math.round(result.pnl), { signed: true })}
                 </span>
               )}
             </Link>

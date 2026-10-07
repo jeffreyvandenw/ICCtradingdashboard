@@ -2,20 +2,19 @@ import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { getCheckIns, getFirstCheckInDay } from "@/lib/checkins";
 import { CheckInCalendar } from "@/components/checkin/CheckInCalendar";
-import {
-  dayKey,
-  formatMonthParam,
-  parseDayParam,
-  parseMonthParam,
-} from "@/lib/date";
+import { CheckInAnswers } from "@/components/checkin/CheckInAnswers";
+import { checkInDayStatus } from "@/lib/checkin-status";
+import { dayKey, parseDayParam, parseMonthParam } from "@/lib/date";
 import type { CheckIn } from "@/lib/db/schema";
+
+const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 export default async function CheckInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ month?: string }>;
+  searchParams: Promise<{ month?: string; day?: string }>;
 }) {
-  const { month } = await searchParams;
+  const { month, day } = await searchParams;
   const monthDate = parseMonthParam(month);
 
   const [checkIns, firstDay] = await Promise.all([
@@ -27,10 +26,14 @@ export default async function CheckInPage({
   for (const entry of checkIns) checkInsByDay.set(entry.day, entry);
 
   const todayKey = dayKey(new Date());
-  const monthPrefix = formatMonthParam(monthDate);
-  const monthEntries = checkIns
-    .filter((entry) => entry.day.startsWith(monthPrefix))
-    .sort((a, b) => (a.day < b.day ? 1 : -1));
+  const selectedDay = day && DAY_PATTERN.test(day) ? day : todayKey;
+  const selectedEntry = checkInsByDay.get(selectedDay);
+  const selectedStatus = checkInDayStatus({
+    day: selectedDay,
+    today: todayKey,
+    firstDay,
+    entry: selectedEntry,
+  });
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-6 py-6">
@@ -41,44 +44,29 @@ export default async function CheckInPage({
         checkInsByDay={checkInsByDay}
         todayKey={todayKey}
         firstDay={firstDay}
+        selectedDay={selectedDay}
       />
 
-      {monthEntries.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-xs font-medium text-slate-500">Deze maand</p>
-          {monthEntries.map((entry) => (
-            <div
-              key={entry.id}
-              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-            >
-              <p className="text-sm font-medium text-slate-900">
-                {format(parseDayParam(entry.day), "EEEE d MMMM", {
-                  locale: nl,
-                })}
-              </p>
-              <div className="mt-1.5 flex flex-wrap gap-4 text-xs text-slate-500">
-                <span>
-                  Gisteren gedaan wat je zei:{" "}
-                  <span className="font-medium text-slate-700">
-                    {entry.didYesterday ? "Ja" : "Nee"}
-                  </span>
-                </span>
-                <span>
-                  Vertrouwen voor die dag:{" "}
-                  <span className="font-medium text-slate-700">
-                    {entry.confidentToday ? "Ja" : "Nee"}
-                  </span>
-                </span>
-              </div>
-              {entry.notes && (
-                <p className="mt-2 rounded-lg bg-slate-50 p-2.5 text-sm text-slate-700">
-                  {entry.notes}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="rounded-2xl border border-slate-200 bg-surface p-5 shadow-sm">
+        <p className="mb-3 text-sm font-semibold text-slate-900 first-letter:uppercase">
+          {format(parseDayParam(selectedDay), "EEEE d MMMM yyyy", {
+            locale: nl,
+          })}
+        </p>
+        {selectedEntry ? (
+          <CheckInAnswers checkIn={selectedEntry} />
+        ) : selectedStatus === "red" ? (
+          <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+            Niets ingevuld op deze dag.
+          </p>
+        ) : (
+          <p className="text-sm text-slate-400">
+            {selectedDay === todayKey
+              ? "Vandaag nog niet ingecheckt — dat doe je op het dashboard."
+              : "Geen check-in voor deze dag."}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

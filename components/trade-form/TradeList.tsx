@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import { deleteTrade } from "@/lib/trades";
 import type { Trade } from "@/lib/db/schema";
 import { ScreenshotPreview } from "@/components/ScreenshotPreview";
+import { formatMoney } from "@/lib/money";
+import { cn } from "@/lib/utils";
 
 const OUTCOME_LABEL: Record<string, string> = {
   win: "Win",
@@ -39,7 +41,7 @@ export function TradeList({
       {trades.map((trade) => (
         <li
           key={trade.id}
-          className="rounded-lg border border-neutral-200 bg-white p-3 text-sm"
+          className="rounded-lg border border-neutral-200 bg-surface p-3 text-sm"
         >
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -47,6 +49,17 @@ export function TradeList({
                 {trade.pair} &middot;{" "}
                 {trade.direction === "long" ? "Long" : "Short"}
                 {trade.outcome && ` · ${OUTCOME_LABEL[trade.outcome]}`}
+                {trade.pnl != null && (
+                  <span
+                    className={cn(
+                      "ml-2",
+                      trade.pnl > 0 && "text-emerald-600",
+                      trade.pnl < 0 && "text-rose-600",
+                    )}
+                  >
+                    {formatMoney(trade.pnl, { signed: true })}
+                  </span>
+                )}
               </p>
               <p className="text-xs text-neutral-500">
                 {showTime && `${format(trade.tradedAt, "HH:mm")} · `}

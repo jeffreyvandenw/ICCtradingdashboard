@@ -1,3 +1,6 @@
+/** The only instrument traded; prefilled in every trade form. */
+export const DEFAULT_PAIR = "XAUUSD";
+
 export type Direction = "long" | "short";
 
 /**

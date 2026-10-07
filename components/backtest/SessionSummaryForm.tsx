@@ -26,7 +26,7 @@ export function SessionSummaryForm({
   }
 
   return (
-    <div className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4">
+    <div className="space-y-2 rounded-lg border border-neutral-200 bg-surface p-4">
       <label className="block text-xs font-medium text-neutral-600">
         Samenvatting achteraf
         <textarea

@@ -31,7 +31,7 @@ export function BookGrid({ books }: { books: Book[] }) {
 
   if (items.length === 0) {
     return (
-      <p className="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-400 shadow-sm">
+      <p className="rounded-xl border border-slate-200 bg-surface p-6 text-center text-sm text-slate-400 shadow-sm">
         Nog geen boeken toegevoegd.
       </p>
     );
@@ -42,7 +42,7 @@ export function BookGrid({ books }: { books: Book[] }) {
       {items.map((book) => (
         <div
           key={book.id}
-          className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+          className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-sm"
         >
           <Link href={`/books/${book.id}/edit`} className="flex flex-1 flex-col">
             <div className="flex aspect-[2/3] items-center justify-center bg-slate-100">
@@ -81,7 +81,7 @@ export function BookGrid({ books }: { books: Book[] }) {
           <button
             type="button"
             onClick={() => handleDelete(book.id)}
-            className="absolute right-2 top-2 hidden rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-slate-500 shadow hover:text-rose-600 group-hover:block"
+            className="absolute right-2 top-2 hidden rounded-full bg-surface/90 px-2 py-1 text-xs font-medium text-slate-500 shadow hover:text-rose-600 group-hover:block"
           >
             Verwijder
           </button>

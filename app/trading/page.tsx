@@ -20,9 +20,10 @@ export default async function TradingDashboardPage({
   const dailyResults = new Map<string, DayResult>();
   for (const trade of liveTrades) {
     const key = dayKey(trade.tradedAt);
-    const existing = dailyResults.get(key) ?? { count: 0, netR: 0 };
+    const existing = dailyResults.get(key) ?? { count: 0, netR: 0, pnl: null };
     existing.count += 1;
     existing.netR += tradeRMultiple(trade);
+    if (trade.pnl != null) existing.pnl = (existing.pnl ?? 0) + trade.pnl;
     dailyResults.set(key, existing);
   }
 
@@ -32,7 +33,7 @@ export default async function TradingDashboardPage({
         <h1 className="text-xl font-semibold text-slate-900">Trading</h1>
         <Link
           href="/api/trades/export"
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
+          className="rounded-lg border border-slate-200 bg-surface px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
         >
           Exporteer CSV
         </Link>
@@ -40,11 +41,11 @@ export default async function TradingDashboardPage({
 
       <StatsPanel stats={stats} />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
-        <div className="xl:col-span-3">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <div>
           <MonthCalendar monthDate={monthDate} dailyResults={dailyResults} />
         </div>
-        <div className="xl:col-span-2">
+        <div className="min-w-0">
           <p className="mb-2 text-xs font-medium text-slate-500">
             Recente trades
           </p>

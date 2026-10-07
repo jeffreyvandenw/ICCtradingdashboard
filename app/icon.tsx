@@ -13,11 +13,11 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#4f46e5",
+          background: "linear-gradient(145deg, #1c1d21 0%, #0a0a0c 100%)",
           borderRadius: 96,
           fontSize: 220,
           fontWeight: 700,
-          color: "white",
+          color: "#d4b06e",
           fontFamily: "sans-serif",
         }}
       >

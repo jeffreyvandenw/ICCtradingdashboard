@@ -4,6 +4,7 @@ import { tradeRMultiple } from "@/lib/stats";
 import { formatDayParam } from "@/lib/date";
 import { cn } from "@/lib/utils";
 import type { Trade } from "@/lib/db/schema";
+import { formatMoney } from "@/lib/money";
 
 const OUTCOME_LABEL: Record<string, string> = {
   win: "Win",
@@ -18,23 +19,24 @@ export function TradesTable({ trades }: { trades: Trade[] }) {
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-400 shadow-sm">
+      <div className="rounded-xl border border-slate-200 bg-surface p-6 text-center text-sm text-slate-400 shadow-sm">
         Nog geen trades gelogd.
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-surface shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[560px] text-left text-sm">
+        <table className="w-full min-w-[520px] text-left text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-xs text-slate-500">
-              <th className="px-4 py-2 font-medium">Datum</th>
-              <th className="px-4 py-2 font-medium">Pair</th>
-              <th className="px-4 py-2 font-medium">Richting</th>
-              <th className="px-4 py-2 font-medium">Uitkomst</th>
-              <th className="px-4 py-2 text-right font-medium">RR</th>
+              <th className="px-3 py-2 font-medium">Datum</th>
+              <th className="px-3 py-2 font-medium">Pair</th>
+              <th className="px-3 py-2 font-medium">Richting</th>
+              <th className="px-3 py-2 font-medium">Uitkomst</th>
+              <th className="px-3 py-2 text-right font-medium">RR</th>
+              <th className="px-3 py-2 text-right font-medium">P&amp;L</th>
             </tr>
           </thead>
           <tbody>
@@ -45,21 +47,21 @@ export function TradesTable({ trades }: { trades: Trade[] }) {
                   key={trade.id}
                   className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
                 >
-                  <td className="px-4 py-2.5">
+                  <td className="px-3 py-2.5">
                     <Link
                       href={`/day/${formatDayParam(trade.tradedAt)}`}
-                      className="text-slate-500 hover:text-indigo-600"
+                      className="text-slate-500 hover:text-gold-600"
                     >
                       {format(trade.tradedAt, "d MMM yyyy")}
                     </Link>
                   </td>
-                  <td className="px-4 py-2.5 font-medium text-slate-900">
+                  <td className="px-3 py-2.5 font-medium text-slate-900">
                     {trade.pair}
                   </td>
-                  <td className="px-4 py-2.5 text-slate-600">
+                  <td className="px-3 py-2.5 text-slate-600">
                     {trade.direction === "long" ? "Long" : "Short"}
                   </td>
-                  <td className="px-4 py-2.5">
+                  <td className="px-3 py-2.5">
                     {trade.outcome ? (
                       <span
                         className={cn(
@@ -80,13 +82,26 @@ export function TradesTable({ trades }: { trades: Trade[] }) {
                   </td>
                   <td
                     className={cn(
-                      "px-4 py-2.5 text-right font-medium",
+                      "px-3 py-2.5 text-right font-medium",
                       r > 0 && "text-emerald-600",
                       r < 0 && "text-rose-600",
                       r === 0 && "text-slate-500",
                     )}
                   >
                     {trade.outcome ? `${r > 0 ? "+" : ""}${r.toFixed(2)}R` : "—"}
+                  </td>
+                  <td
+                    className={cn(
+                      "px-3 py-2.5 text-right font-medium whitespace-nowrap",
+                      trade.pnl != null && trade.pnl > 0 && "text-emerald-600",
+                      trade.pnl != null && trade.pnl < 0 && "text-rose-600",
+                      (trade.pnl == null || trade.pnl === 0) &&
+                        "text-slate-500",
+                    )}
+                  >
+                    {trade.pnl == null
+                      ? "—"
+                      : formatMoney(trade.pnl, { signed: true })}
                   </td>
                 </tr>
               );

@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useTransition, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+  type FormEvent,
+} from "react";
 import { createTodo, deleteTodo, toggleTodo } from "@/lib/todos";
 import { cn } from "@/lib/utils";
 import type { Todo } from "@/lib/db/schema";
@@ -62,13 +68,13 @@ export function TodoList({ todos }: { todos: Todo[] }) {
     <div className="space-y-6">
       <form
         onSubmit={handleAdd}
-        className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center"
+        className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-surface p-4 shadow-sm sm:flex-row sm:items-center"
       >
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Nieuwe taak..."
-          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none"
+          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-gold-400 focus:outline-none"
         />
         <select
           value={priority}
@@ -87,7 +93,7 @@ export function TodoList({ todos }: { todos: Todo[] }) {
         />
         <button
           type="submit"
-          className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+          className="rounded-lg bg-gold-600 px-3 py-2 text-sm font-medium text-white hover:bg-gold-500"
         >
           Toevoegen
         </button>
@@ -98,7 +104,7 @@ export function TodoList({ todos }: { todos: Todo[] }) {
           Open ({open.length})
         </p>
         {open.length === 0 ? (
-          <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-400 shadow-sm">
+          <p className="rounded-xl border border-slate-200 bg-surface p-4 text-sm text-slate-400 shadow-sm">
             Niks meer te doen.
           </p>
         ) : (
@@ -137,6 +143,32 @@ export function TodoList({ todos }: { todos: Todo[] }) {
   );
 }
 
+const URL_PATTERN = /(https?:\/\/[^\s]+)/g;
+
+/** Renders text with any URLs in it turned into clickable links. */
+function Linkified({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(URL_PATTERN).map((part, i) =>
+        i % 2 === 1 ? (
+          <a
+            key={i}
+            href={part}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-gold-600 underline underline-offset-2 hover:text-gold-500"
+          >
+            {part}
+          </a>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
+
 function TodoRow({
   todo,
   onToggle,
@@ -146,22 +178,44 @@ function TodoRow({
   onToggle: (id: string, done: boolean) => void;
   onDelete: (id: string) => void;
 }) {
+  const titleRef = useRef<HTMLParagraphElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+
+  // Only offer "uitklappen" when the title is actually cut off.
+  useEffect(() => {
+    const el = titleRef.current;
+    if (!el || expanded) return;
+    const measure = () => setOverflows(el.scrollWidth > el.clientWidth);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [expanded, todo.title]);
+
+  const canExpand = overflows || expanded;
+
   return (
-    <li className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm">
+    <li className="flex items-start gap-3 rounded-lg border border-slate-200 bg-surface px-3 py-2 shadow-sm">
       <input
         type="checkbox"
         checked={todo.done}
         onChange={(e) => onToggle(todo.id, e.target.checked)}
-        className="h-4 w-4 rounded border-slate-300 text-indigo-600"
+        className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 accent-gold-500"
       />
-      <div className="min-w-0 flex-1">
+      <div
+        className={cn("min-w-0 flex-1", canExpand && "cursor-pointer")}
+        onClick={() => canExpand && setExpanded((v) => !v)}
+      >
         <p
+          ref={titleRef}
           className={cn(
-            "truncate text-sm font-medium text-slate-900",
+            "text-sm font-medium text-slate-900",
+            expanded ? "whitespace-pre-wrap break-words" : "truncate",
             todo.done && "text-slate-400 line-through",
           )}
         >
-          {todo.title}
+          {expanded ? <Linkified text={todo.title} /> : todo.title}
         </p>
         {todo.dueDate && (
           <p className="text-xs text-slate-400">
@@ -169,9 +223,25 @@ function TodoRow({
           </p>
         )}
       </div>
+      {canExpand && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="shrink-0 text-xs font-medium text-slate-400 hover:text-slate-900"
+          aria-expanded={expanded}
+        >
+          <span className="hidden sm:inline">
+            {expanded ? "Inklappen " : "Uitklappen "}
+          </span>
+          <span className="sr-only sm:hidden">
+            {expanded ? "Inklappen" : "Uitklappen"}
+          </span>
+          {expanded ? "▴" : "▾"}
+        </button>
+      )}
       <span
         className={cn(
-          "rounded-full px-2 py-0.5 text-xs font-medium",
+          "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
           PRIORITY_CLASSES[todo.priority],
         )}
       >
@@ -180,9 +250,12 @@ function TodoRow({
       <button
         type="button"
         onClick={() => onDelete(todo.id)}
-        className="text-xs font-medium text-slate-400 hover:text-rose-600"
+        className="shrink-0 text-xs font-medium text-slate-400 hover:text-rose-600"
       >
-        Verwijderen
+        <span className="hidden sm:inline">Verwijderen</span>
+        <span className="sm:hidden" aria-label="Verwijderen">
+          ✕
+        </span>
       </button>
     </li>
   );

@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import { createTodayCheckIn } from "@/lib/checkins";
 import { cn } from "@/lib/utils";
 import type { CheckIn } from "@/lib/db/schema";
+import {
+  CheckInAnswers,
+  CONFIDENT_TOMORROW_QUESTION,
+  DID_AS_PROMISED_QUESTION,
+} from "./CheckInAnswers";
+
+const textareaClass =
+  "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-gold-400 focus:outline-none";
 
 function YesNoToggle({
   value,
@@ -43,6 +51,39 @@ function YesNoToggle({
   );
 }
 
+function Question({
+  question,
+  value,
+  onChange,
+  note,
+  onNoteChange,
+  notePlaceholder,
+}: {
+  question: string;
+  value: boolean | null;
+  onChange: (value: boolean) => void;
+  note: string;
+  onNoteChange: (value: string) => void;
+  notePlaceholder: string;
+}) {
+  return (
+    <div className="space-y-2">
+      <p className="text-sm text-slate-700">{question}</p>
+      <YesNoToggle value={value} onChange={onChange} />
+      {value === false && (
+        <textarea
+          value={note}
+          onChange={(e) => onNoteChange(e.target.value)}
+          rows={2}
+          required
+          placeholder={notePlaceholder}
+          className={textareaClass}
+        />
+      )}
+    </div>
+  );
+}
+
 export function DailyCheckIn({
   todayCheckIn,
   streak,
@@ -52,22 +93,28 @@ export function DailyCheckIn({
 }) {
   const router = useRouter();
   const [checkIn, setCheckIn] = useState(todayCheckIn);
-  const [didYesterday, setDidYesterday] = useState<boolean | null>(null);
-  const [confidentToday, setConfidentToday] = useState<boolean | null>(null);
+  const [didAsPromised, setDidAsPromised] = useState<boolean | null>(null);
+  const [didAsPromisedNote, setDidAsPromisedNote] = useState("");
+  const [confidentTomorrow, setConfidentTomorrow] = useState<boolean | null>(
+    null,
+  );
+  const [confidentTomorrowNote, setConfidentTomorrowNote] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (didYesterday === null || confidentToday === null) return;
+    if (didAsPromised === null || confidentTomorrow === null) return;
 
     setSubmitting(true);
     setError(null);
     try {
       const created = await createTodayCheckIn({
-        didYesterday,
-        confidentToday,
+        didAsPromised,
+        didAsPromisedNote,
+        confidentTomorrow,
+        confidentTomorrowNote,
         notes,
       });
       setCheckIn(created);
@@ -81,11 +128,15 @@ export function DailyCheckIn({
     }
   }
 
-  const canSubmit = didYesterday !== null && confidentToday !== null;
+  const canSubmit =
+    didAsPromised !== null &&
+    confidentTomorrow !== null &&
+    (didAsPromised || didAsPromisedNote.trim() !== "") &&
+    (confidentTomorrow || confidentTomorrowNote.trim() !== "");
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="flex h-full flex-col rounded-2xl border border-slate-200 bg-surface p-5 shadow-sm">
+      <div className="mb-4 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-slate-900">
           Dagelijkse check-in
         </h2>
@@ -97,29 +148,9 @@ export function DailyCheckIn({
       </div>
 
       {checkIn ? (
-        <div className="space-y-2 text-sm">
-          <p className="text-slate-600">
-            Vandaag al ingecheckt ✅
-          </p>
-          <div className="flex flex-wrap gap-4 text-xs text-slate-500">
-            <span>
-              Gisteren gedaan wat je zei: {" "}
-              <span className="font-medium text-slate-700">
-                {checkIn.didYesterday ? "Ja" : "Nee"}
-              </span>
-            </span>
-            <span>
-              Vertrouwen voor vandaag: {" "}
-              <span className="font-medium text-slate-700">
-                {checkIn.confidentToday ? "Ja" : "Nee"}
-              </span>
-            </span>
-          </div>
-          {checkIn.notes && (
-            <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-              {checkIn.notes}
-            </p>
-          )}
+        <div className="space-y-3">
+          <p className="text-sm text-slate-500">Vandaag al ingecheckt ✅</p>
+          <CheckInAnswers checkIn={checkIn} />
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -129,26 +160,26 @@ export function DailyCheckIn({
             </p>
           )}
 
-          <div>
-            <p className="mb-1.5 text-sm text-slate-700">
-              Heb je gisteren gedaan wat je zei dat je ging doen?
-            </p>
-            <YesNoToggle value={didYesterday} onChange={setDidYesterday} />
-          </div>
+          <Question
+            question={DID_AS_PROMISED_QUESTION}
+            value={didAsPromised}
+            onChange={setDidAsPromised}
+            note={didAsPromisedNote}
+            onNoteChange={setDidAsPromisedNote}
+            notePlaceholder="Wat heb je niet gedaan, en waarom niet?"
+          />
 
-          <div>
-            <p className="mb-1.5 text-sm text-slate-700">
-              Heb je er vertrouwen in dat je vandaag gaat doen wat je moet
-              doen?
-            </p>
-            <YesNoToggle
-              value={confidentToday}
-              onChange={setConfidentToday}
-            />
-          </div>
+          <Question
+            question={CONFIDENT_TOMORROW_QUESTION}
+            value={confidentTomorrow}
+            onChange={setConfidentTomorrow}
+            note={confidentTomorrowNote}
+            onNoteChange={setConfidentTomorrowNote}
+            notePlaceholder="Waarom niet? Wat houdt je tegen?"
+          />
 
-          <div>
-            <p className="mb-1.5 text-sm text-slate-700">
+          <div className="space-y-2">
+            <p className="text-sm text-slate-700">
               Is er nog iets wat je kwijt wilt?
             </p>
             <textarea
@@ -156,14 +187,14 @@ export function DailyCheckIn({
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="Optioneel..."
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className={textareaClass}
             />
           </div>
 
           <button
             type="submit"
             disabled={!canSubmit || submitting}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-gold-600 px-4 py-2 text-sm font-medium text-white hover:bg-gold-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? "Opslaan..." : "Check-in opslaan"}
           </button>

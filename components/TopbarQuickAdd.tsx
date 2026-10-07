@@ -12,7 +12,7 @@ export function TopbarQuickAdd() {
   return (
     <Link
       href={`/day/${formatDayParam(new Date())}`}
-      className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
+      className="rounded-lg bg-gold-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-gold-500"
     >
       + Trade toevoegen
     </Link>

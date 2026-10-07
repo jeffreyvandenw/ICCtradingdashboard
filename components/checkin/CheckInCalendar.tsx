@@ -1,32 +1,43 @@
 import Link from "next/link";
 import { format, isSameMonth, isToday } from "date-fns";
+import { nl } from "date-fns/locale";
 import {
   dayKey,
+  formatMonthParam,
   getCalendarGrid,
   nextMonthParam,
   previousMonthParam,
 } from "@/lib/date";
-import { checkInDayStatus } from "@/lib/checkin-status";
+import { checkInDayStatus, type CheckInDayStatus } from "@/lib/checkin-status";
 import { cn } from "@/lib/utils";
 import type { CheckIn } from "@/lib/db/schema";
 
 const WEEKDAY_LABELS = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
+
+const STATUS_CLASSES: Record<CheckInDayStatus, string> = {
+  green: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200",
+  orange: "bg-amber-100 text-amber-900 hover:bg-amber-200",
+  red: "bg-rose-100 text-rose-900 hover:bg-rose-200",
+  neutral: "bg-slate-50 text-slate-400 hover:bg-slate-100",
+};
 
 export function CheckInCalendar({
   monthDate,
   checkInsByDay,
   todayKey,
   firstDay,
+  selectedDay,
 }: {
   monthDate: Date;
   checkInsByDay: Map<string, CheckIn>;
   todayKey: string;
   firstDay: string | null;
+  selectedDay: string;
 }) {
   const days = getCalendarGrid(monthDate);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-surface p-4 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <Link
           href={`/checkin?month=${previousMonthParam(monthDate)}`}
@@ -34,8 +45,8 @@ export function CheckInCalendar({
         >
           &larr;
         </Link>
-        <h2 className="text-base font-semibold text-slate-900">
-          {format(monthDate, "MMMM yyyy")}
+        <h2 className="text-base font-semibold text-slate-900 first-letter:uppercase">
+          {format(monthDate, "MMMM yyyy", { locale: nl })}
         </h2>
         <Link
           href={`/checkin?month=${nextMonthParam(monthDate)}`}
@@ -61,44 +72,40 @@ export function CheckInCalendar({
             day: key,
             today: todayKey,
             firstDay,
-            hasEntry: checkInsByDay.has(key),
+            entry: checkInsByDay.get(key),
           });
 
-          const colorClasses =
-            status === "green"
-              ? "bg-emerald-100 text-emerald-900"
-              : status === "red"
-                ? "bg-rose-100 text-rose-900"
-                : "bg-slate-50 text-slate-400";
-
           return (
-            <div
+            <Link
               key={key}
+              href={`/checkin?month=${formatMonthParam(day)}&day=${key}`}
+              scroll={false}
               className={cn(
                 "flex aspect-square flex-col items-center justify-center rounded-lg text-sm transition-colors",
-                colorClasses,
+                STATUS_CLASSES[status],
                 !inMonth && "opacity-40",
-                isToday(day) && "ring-2 ring-indigo-600",
+                isToday(day) && "ring-1 ring-gold-500",
+                key === selectedDay && "ring-2 ring-slate-900",
               )}
             >
               <span className="font-medium">{format(day, "d")}</span>
-            </div>
+            </Link>
           );
         })}
       </div>
 
       <div className="mt-4 flex flex-wrap gap-4 text-xs text-slate-500">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          Ingevuld
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+          Gedaan wat je moest
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-          Gemist
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+          Ingevuld, niet alles &lsquo;ja&rsquo;
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-slate-200" />
-          Niet van toepassing
+          <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+          Niet ingevuld
         </span>
       </div>
     </div>

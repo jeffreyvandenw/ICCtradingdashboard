@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import type { DashboardStats } from "@/lib/stats";
+import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { EquityCurveChart } from "./EquityCurveChart";
 
@@ -20,9 +22,9 @@ function HeroCard({
   tone?: Tone;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-surface p-4 shadow-sm">
       <p className="text-xs font-medium text-slate-500">{label}</p>
-      <p className={cn("mt-1.5 text-2xl font-semibold", toneClasses(tone))}>
+      <p className={cn("mt-1.5 text-2xl font-light", toneClasses(tone))}>
         {value}
       </p>
     </div>
@@ -31,7 +33,7 @@ function HeroCard({
 
 function MiniCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-3">
+    <div className="rounded-2xl border border-slate-200 bg-surface p-3">
       <p className="text-xs text-slate-500">{label}</p>
       <p className="mt-1 text-sm font-semibold text-slate-900">{value}</p>
     </div>
@@ -60,7 +62,22 @@ function toneOf(value: number | null, positiveFrom = 0): Tone {
   return "neutral";
 }
 
-export function StatsPanel({ stats }: { stats: DashboardStats }) {
+/**
+ * `live` is the trading journal: it shows P&L next to R. `backtest` drops
+ * trades/week (backtests aren't spread over real time) and takes its own
+ * chart — the P&L curve from the session's starting balance.
+ */
+export function StatsPanel({
+  stats,
+  variant = "live",
+  chart,
+}: {
+  stats: DashboardStats;
+  variant?: "live" | "backtest";
+  chart?: ReactNode;
+}) {
+  const isLive = variant === "live";
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -69,25 +86,46 @@ export function StatsPanel({ stats }: { stats: DashboardStats }) {
           value={fmtR(stats.netR)}
           tone={toneOf(stats.netR)}
         />
+        {isLive && (
+          <HeroCard
+            label="P&L"
+            value={
+              stats.netPnl == null
+                ? "—"
+                : formatMoney(stats.netPnl, { signed: true })
+            }
+            tone={toneOf(stats.netPnl)}
+          />
+        )}
         <HeroCard label="Winrate" value={fmtPct(stats.winratePct)} />
         <HeroCard
           label="Profit factor"
           value={fmtNum(stats.profitFactor)}
           tone={toneOf(stats.profitFactor, 1)}
         />
-        <HeroCard
-          label="Gem. RR"
-          value={fmtNum(stats.avgRR)}
-          tone={toneOf(stats.avgRR)}
-        />
+        {!isLive && (
+          <HeroCard
+            label="Gem. RR"
+            value={fmtNum(stats.avgRR)}
+            tone={toneOf(stats.avgRR)}
+          />
+        )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+      <div
+        className={cn(
+          "grid grid-cols-2 gap-3 sm:grid-cols-3",
+          isLive ? "lg:grid-cols-6" : "lg:grid-cols-4",
+        )}
+      >
         <MiniCard label="Trades" value={String(stats.tradeCount)} />
-        <MiniCard
-          label="Trades / week"
-          value={fmtNum(stats.avgTradesPerWeek)}
-        />
+        {isLive && (
+          <MiniCard
+            label="Trades / week"
+            value={fmtNum(stats.avgTradesPerWeek)}
+          />
+        )}
+        {isLive && <MiniCard label="Gem. RR" value={fmtNum(stats.avgRR)} />}
         <MiniCard label="Expectancy" value={`${fmtNum(stats.expectancy)}R`} />
         <MiniCard
           label="Winrate long"
@@ -97,18 +135,16 @@ export function StatsPanel({ stats }: { stats: DashboardStats }) {
           label="Winrate short"
           value={fmtPct(stats.winrateByDirection.short)}
         />
-        <MiniCard
-          label="Winrate NY"
-          value={fmtPct(stats.winrateBySession.ny)}
-        />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <p className="mb-2 text-xs font-medium text-slate-500">
-          Equity curve (R)
-        </p>
-        <EquityCurveChart data={stats.equityCurve} />
-      </div>
+      {chart ?? (
+        <div className="rounded-2xl border border-slate-200 bg-surface p-4 shadow-sm">
+          <p className="mb-2 text-xs font-medium text-slate-500">
+            Equity curve (R)
+          </p>
+          <EquityCurveChart data={stats.equityCurve} />
+        </div>
+      )}
     </div>
   );
 }

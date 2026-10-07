@@ -11,7 +11,7 @@ export default async function BooksPage() {
         <h1 className="text-xl font-semibold text-slate-900">Boeken</h1>
         <Link
           href="/books/new"
-          className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
+          className="rounded-lg bg-gold-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-gold-500"
         >
           + Boek toevoegen
         </Link>

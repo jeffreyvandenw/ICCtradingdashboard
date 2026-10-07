@@ -31,7 +31,7 @@ export default async function RecipeDetailPage({
       )}
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-surface p-4 shadow-sm">
           <p className="mb-2 text-xs font-medium text-slate-500">
             Ingrediënten
           </p>
@@ -41,7 +41,7 @@ export default async function RecipeDetailPage({
             ))}
           </ul>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-surface p-4 shadow-sm">
           <p className="mb-2 text-xs font-medium text-slate-500">Bereiding</p>
           <ol className="space-y-2 text-sm text-slate-700">
             {recipe.steps.map((step, i) => (
@@ -55,7 +55,7 @@ export default async function RecipeDetailPage({
       </div>
 
       {recipe.notes && (
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-surface p-4 shadow-sm">
           <p className="mb-1 text-xs font-medium text-slate-500">Notities</p>
           <p className="text-sm text-slate-700">{recipe.notes}</p>
         </div>

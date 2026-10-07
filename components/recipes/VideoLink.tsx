@@ -16,7 +16,7 @@ export function VideoLink({
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-indigo-600 shadow-sm hover:bg-slate-50 hover:underline"
+      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-surface p-4 text-sm font-medium text-gold-600 shadow-sm hover:bg-slate-50 hover:underline"
     >
       <span aria-hidden>▶</span>
       <span>Bekijk video</span>

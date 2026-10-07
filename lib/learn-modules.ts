@@ -41,3 +41,71 @@ export function groupLessonsByModule(lessons: Lesson[]): LessonModule[] {
 
   return Array.from(groups.values());
 }
+
+export interface ModuleProgress {
+  module: LessonModule;
+  completed: number;
+  total: number;
+}
+
+export interface NextLessonInfo {
+  /** The lesson to watch next, or null when nothing is in progress. */
+  nextLesson: Lesson | null;
+  module: LessonModule | null;
+  /**
+   * Set when the last playlist you worked in is finished and no other one
+   * is in progress: the playlists that still have unfinished lessons.
+   */
+  openModules: ModuleProgress[] | null;
+}
+
+function progressOf(module: LessonModule): ModuleProgress {
+  return {
+    module,
+    completed: module.lessons.filter((l) => l.completed).length,
+    total: module.lessons.length,
+  };
+}
+
+/** The lesson right after the last completed one (lessons are in list order). */
+function nextInModule(module: LessonModule): Lesson | null {
+  const lastDone = module.lessons.findLastIndex((l) => l.completed);
+  return (
+    module.lessons.slice(lastDone + 1).find((l) => !l.completed) ??
+    module.lessons.find((l) => !l.completed) ??
+    null
+  );
+}
+
+/**
+ * Works out what "Leren" on the dashboard should show:
+ * - a playlist you've started but not finished → its next video
+ * - nothing started yet → the first video of the first playlist
+ * - every started playlist finished → the playlists still open
+ */
+export function getNextLessonInfo(modules: LessonModule[]): NextLessonInfo {
+  const progress = modules.map(progressOf);
+
+  const inProgress = progress.find(
+    (p) => p.completed > 0 && p.completed < p.total,
+  );
+  if (inProgress) {
+    return {
+      nextLesson: nextInModule(inProgress.module),
+      module: inProgress.module,
+      openModules: null,
+    };
+  }
+
+  const open = progress.filter((p) => p.completed < p.total);
+  const anyStarted = progress.some((p) => p.completed > 0);
+  if (!anyStarted && open.length > 0) {
+    return {
+      nextLesson: nextInModule(open[0].module),
+      module: open[0].module,
+      openModules: null,
+    };
+  }
+
+  return { nextLesson: null, module: null, openModules: open };
+}

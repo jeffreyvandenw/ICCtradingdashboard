@@ -13,6 +13,7 @@ export const tradeFormSchema = z.object({
   exitPrice: z.coerce.number().nullable().optional(),
 
   rr: z.coerce.number().nullable().optional(),
+  pnl: z.coerce.number().nullable().optional(),
   outcome: z.enum(["win", "loss", "breakeven"]).nullable().optional(),
 
   tradedAt: z.coerce.date(),
@@ -103,9 +104,13 @@ export type BookFormValues = z.infer<typeof bookFormSchema>;
 
 export const recipeFormSchema = z.object({
   title: z.string().min(1, "Titel is verplicht"),
-  sourceUrl: z.string().url().nullable().optional().or(z.literal("")),
-  sourcePlatform: z.enum(["youtube", "tiktok", "other"]).default("other"),
-  embedUrl: z.string().nullable().optional(),
+  sourceUrl: z
+    .string()
+    .trim()
+    .url("Vul een geldige video-link in")
+    .nullable()
+    .optional()
+    .or(z.literal("")),
   ingredients: z.array(z.string().min(1)).default([]),
   steps: z.array(z.string().min(1)).default([]),
   tags: z.array(z.string().min(1)).default([]),
@@ -114,17 +119,21 @@ export const recipeFormSchema = z.object({
 
 export type RecipeFormValues = z.infer<typeof recipeFormSchema>;
 
-export const recipeTranscriptSchema = z.object({
-  sourceUrl: z.string().url("Vul een geldige video-link in"),
-  transcript: z.string().min(20, "Plak het transcript van de video"),
-});
-
-export type RecipeTranscriptValues = z.infer<typeof recipeTranscriptSchema>;
-
-export const checkInFormSchema = z.object({
-  didYesterday: z.boolean(),
-  confidentToday: z.boolean(),
-  notes: z.string().nullable().optional(),
-});
+export const checkInFormSchema = z
+  .object({
+    didAsPromised: z.boolean(),
+    didAsPromisedNote: z.string().trim().nullable().optional(),
+    confidentTomorrow: z.boolean(),
+    confidentTomorrowNote: z.string().trim().nullable().optional(),
+    notes: z.string().nullable().optional(),
+  })
+  .refine((v) => v.didAsPromised || !!v.didAsPromisedNote, {
+    message: "Licht toe wat je niet hebt gedaan en waarom niet.",
+    path: ["didAsPromisedNote"],
+  })
+  .refine((v) => v.confidentTomorrow || !!v.confidentTomorrowNote, {
+    message: "Licht toe waarom je er geen vertrouwen in hebt.",
+    path: ["confidentTomorrowNote"],
+  });
 
 export type CheckInFormValues = z.infer<typeof checkInFormSchema>;

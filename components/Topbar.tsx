@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { auth } from "@/auth";
 import { TopbarQuickAdd } from "@/components/TopbarQuickAdd";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export async function Topbar() {
   const session = await auth();
@@ -10,7 +11,7 @@ export async function Topbar() {
   const today = new Date();
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6">
+    <header className="flex h-14 shrink-0 items-center justify-between border-b border-slate-200 bg-surface/80 px-4 backdrop-blur sm:px-6">
       <div className="flex items-center gap-3">
         <label
           htmlFor="nav-toggle"
@@ -30,7 +31,10 @@ export async function Topbar() {
           {format(today, "EEEE d MMMM yyyy", { locale: nl })}
         </p>
       </div>
-      <TopbarQuickAdd />
+      <div className="flex items-center gap-2">
+        <TopbarQuickAdd />
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

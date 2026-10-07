@@ -1,4 +1,4 @@
-import { RecipeImportForm } from "@/components/recipes/RecipeImportForm";
+import { RecipeForm } from "@/components/recipes/RecipeForm";
 
 export default function NewRecipePage() {
   return (
@@ -6,7 +6,7 @@ export default function NewRecipePage() {
       <h1 className="text-xl font-semibold text-slate-900">
         Recept toevoegen
       </h1>
-      <RecipeImportForm />
+      <RecipeForm />
     </div>
   );
 }

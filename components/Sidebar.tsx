@@ -6,10 +6,15 @@ export async function Sidebar() {
   if (!session) return null;
 
   return (
-    <aside className="flex h-full w-56 shrink-0 flex-col border-r border-slate-200 bg-white">
+    <aside className="flex h-full w-56 shrink-0 flex-col border-r border-slate-200 bg-surface">
       <div className="flex h-14 items-center border-b border-slate-200 px-4">
-        <span className="text-sm font-semibold tracking-tight text-slate-900">
-          ICC Hub
+        <span className="flex items-center gap-2.5">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-gold-300 to-gold-600 text-[11px] font-bold text-black">
+            IH
+          </span>
+          <span className="text-sm font-semibold tracking-[0.18em] text-slate-900 uppercase">
+            ICC Hub
+          </span>
         </span>
       </div>
 

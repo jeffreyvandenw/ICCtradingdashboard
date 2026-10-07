@@ -21,7 +21,7 @@ function GlossaryRow({ term }: { term: GlossaryTerm }) {
 
   if (editing) {
     return (
-      <li className="space-y-2 rounded-lg border border-neutral-200 bg-white p-3">
+      <li className="space-y-2 rounded-lg border border-neutral-200 bg-surface p-3">
         <input
           className={inputClass}
           value={termText}
@@ -64,7 +64,7 @@ function GlossaryRow({ term }: { term: GlossaryTerm }) {
   }
 
   return (
-    <li className="rounded-lg border border-neutral-200 bg-white p-3 text-sm">
+    <li className="rounded-lg border border-neutral-200 bg-surface p-3 text-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-medium text-neutral-900">
@@ -152,7 +152,7 @@ export function GlossaryManager({ terms }: { terms: GlossaryTerm[] }) {
           type="button"
           disabled={adding}
           onClick={handleAdd}
-          className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+          className="rounded-md bg-gold-600 hover:bg-gold-500 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
         >
           + Begrip toevoegen
         </button>

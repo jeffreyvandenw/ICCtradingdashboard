@@ -192,13 +192,13 @@ export function GroceryList({
   }
 
   const inputClass =
-    "rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-base focus:border-indigo-400 focus:outline-none sm:text-sm";
+    "rounded-lg border border-slate-200 bg-surface px-3 py-2.5 text-base focus:border-gold-400 focus:outline-none sm:text-sm";
 
   return (
     <div className="space-y-5">
       <form
         onSubmit={handleAdd}
-        className="space-y-2.5 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4"
+        className="space-y-2.5 rounded-xl border border-slate-200 bg-surface p-3 shadow-sm sm:p-4"
       >
         <input
           ref={nameRef}
@@ -310,7 +310,7 @@ export function GroceryList({
           <button
             type="submit"
             disabled={!name.trim() || shopValue === NEW_SHOP}
-            className="ml-auto h-11 rounded-lg bg-indigo-600 px-5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-40"
+            className="ml-auto h-11 rounded-lg bg-gold-600 px-5 text-sm font-medium text-white hover:bg-gold-500 disabled:opacity-40"
           >
             Toevoegen
           </button>
@@ -338,7 +338,7 @@ export function GroceryList({
       )}
 
       {groups.length === 0 ? (
-        <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-400 shadow-sm">
+        <p className="rounded-xl border border-slate-200 bg-surface p-4 text-sm text-slate-400 shadow-sm">
           {openTotal === 0
             ? "Niks meer te halen."
             : "Niks meer te halen bij deze winkel."}
@@ -357,7 +357,7 @@ export function GroceryList({
                     {open === 0 ? "alles binnen" : `${open} te halen`}
                   </span>
                 </div>
-                <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-sm">
                   {group.items.map((item) => (
                     <GroceryRow
                       key={item.id}
@@ -408,8 +408,8 @@ function FilterChip({
       className={cn(
         "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
         active
-          ? "border-indigo-600 bg-indigo-600 text-white"
-          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+          ? "border-gold-600 bg-gold-600 text-white"
+          : "border-slate-200 bg-surface text-slate-600 hover:bg-slate-50",
       )}
     >
       {label}
@@ -508,7 +508,7 @@ function GroceryRow({
           href={item.note}
           target="_blank"
           rel="noreferrer"
-          className="flex h-10 shrink-0 items-center px-2 text-xs font-medium text-indigo-600 hover:underline"
+          className="flex h-10 shrink-0 items-center px-2 text-xs font-medium text-gold-600 hover:underline"
         >
           Link
         </a>

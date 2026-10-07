@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
+        className="w-full max-w-sm space-y-4 rounded-xl border border-neutral-200 bg-surface p-6 shadow-sm"
       >
         <div>
           <h1 className="text-lg font-semibold text-neutral-900">
@@ -82,7 +82,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="w-full rounded-md bg-gold-600 hover:bg-gold-500 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
         >
           {submitting ? "Bezig..." : "Inloggen"}
         </button>

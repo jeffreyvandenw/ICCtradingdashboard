@@ -68,6 +68,7 @@ function toNewTrade(values: TradeFormValues): NewTrade {
     takeProfit: values.takeProfit ?? null,
     exitPrice: values.exitPrice ?? null,
     rr: rr ?? null,
+    pnl: values.pnl ?? null,
     outcome: values.outcome ?? null,
     tradedAt: values.tradedAt,
     session: values.session ?? null,

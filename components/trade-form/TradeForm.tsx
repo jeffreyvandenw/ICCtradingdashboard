@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { createTrade } from "@/lib/trades";
 import type { Trade } from "@/lib/db/schema";
+import { DEFAULT_PAIR } from "@/lib/rr";
 
 interface TradeFormProps {
   type: "live" | "backtest";
@@ -28,7 +29,7 @@ export function TradeForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [pair, setPair] = useState("");
+  const [pair, setPair] = useState(DEFAULT_PAIR);
   const [direction, setDirection] = useState<"long" | "short">("long");
   const [entry, setEntry] = useState("");
   const [exitPrice, setExitPrice] = useState("");
@@ -40,6 +41,7 @@ export function TradeForm({
   const [stopLoss, setStopLoss] = useState("");
   const [takeProfit, setTakeProfit] = useState("");
   const [rr, setRr] = useState("");
+  const [pnl, setPnl] = useState("");
   const [session, setSession] = useState<"london" | "ny" | "asia" | "">("");
   const [setupTag, setSetupTag] = useState("");
   const [mistakeTags, setMistakeTags] = useState("");
@@ -49,7 +51,7 @@ export function TradeForm({
   const [afterNote, setAfterNote] = useState("");
 
   function resetForm() {
-    setPair("");
+    setPair(DEFAULT_PAIR);
     setDirection("long");
     setEntry("");
     setExitPrice("");
@@ -58,6 +60,7 @@ export function TradeForm({
     setStopLoss("");
     setTakeProfit("");
     setRr("");
+    setPnl("");
     setSession("");
     setSetupTag("");
     setMistakeTags("");
@@ -83,6 +86,7 @@ export function TradeForm({
         takeProfit: takeProfit ? Number(takeProfit) : null,
         exitPrice: exitPrice ? Number(exitPrice) : null,
         rr: rr ? Number(rr) : null,
+        pnl: pnl ? Number(pnl) : null,
         outcome: outcome || null,
         tradedAt: new Date(tradedAt),
         session: session || null,
@@ -108,13 +112,13 @@ export function TradeForm({
   }
 
   const inputClass =
-    "mt-1 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm";
+    "mt-1 w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-gold-400 focus:outline-none";
   const labelClass = "block text-xs font-medium text-neutral-600";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-3 rounded-lg border border-neutral-200 bg-white p-4"
+      className="space-y-3 rounded-2xl border border-neutral-200 bg-surface p-4 shadow-sm"
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <label className={labelClass}>
@@ -175,6 +179,17 @@ export function TradeForm({
           </select>
         </label>
         <label className={labelClass}>
+          P&amp;L (€)
+          <input
+            type="number"
+            step="any"
+            className={inputClass}
+            value={pnl}
+            onChange={(e) => setPnl(e.target.value)}
+            placeholder="bijv. 125 of -80"
+          />
+        </label>
+        <label className={labelClass}>
           Datum/tijd
           <input
             type="datetime-local"
@@ -217,7 +232,7 @@ export function TradeForm({
             />
           </label>
           <label className={labelClass}>
-            RR (auto, overschrijfbaar)
+            RR
             <input
               type="number"
               step="any"
@@ -302,7 +317,7 @@ export function TradeForm({
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+        className="rounded-md bg-gold-600 hover:bg-gold-500 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
       >
         {submitting ? "Opslaan..." : "Trade toevoegen"}
       </button>
