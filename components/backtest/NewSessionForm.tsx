@@ -6,18 +6,15 @@ import { createBacktestSession } from "@/lib/backtest";
 
 export function NewSessionForm({
   defaultHypothesis,
-  defaultBalance,
   lessonId,
 }: {
   defaultHypothesis?: string;
-  defaultBalance?: number | null;
   lessonId?: string;
 }) {
   const router = useRouter();
   const [hypothesis, setHypothesis] = useState(defaultHypothesis ?? "");
-  const [balance, setBalance] = useState(
-    defaultBalance != null ? String(defaultBalance) : "",
-  );
+  // Every session starts with a fresh balance; nothing carries over.
+  const [balance, setBalance] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

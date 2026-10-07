@@ -12,6 +12,7 @@ interface RowState {
   entry: string;
   stopLoss: string;
   takeProfit: string;
+  exitPrice: string;
   rr: string;
   outcome: "win" | "loss" | "breakeven" | "";
   screenshotUrl: string;
@@ -29,6 +30,7 @@ function blankRow(key: string): RowState {
     entry: "",
     stopLoss: "",
     takeProfit: "",
+    exitPrice: "",
     rr: "",
     outcome: "",
     screenshotUrl: "",
@@ -75,7 +77,7 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
         entry: Number(row.entry),
         stopLoss: row.stopLoss ? Number(row.stopLoss) : null,
         takeProfit: row.takeProfit ? Number(row.takeProfit) : null,
-        exitPrice: null,
+        exitPrice: row.exitPrice ? Number(row.exitPrice) : null,
         rr: row.rr ? Number(row.rr) : null,
         outcome: row.outcome || null,
         tradedAt: new Date(),
@@ -197,7 +199,7 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <label className={`${labelClass} col-span-2`}>
+              <label className={`${labelClass} col-span-2 sm:col-span-4`}>
                 Before-notitie
                 <textarea
                   rows={2}
@@ -226,6 +228,18 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
                 </select>
               </label>
               <label className={labelClass}>
+                Exit
+                <input
+                  type="number"
+                  step="any"
+                  className={inputClass}
+                  value={row.exitPrice}
+                  onChange={(e) =>
+                    updateRow(row.key, { exitPrice: e.target.value })
+                  }
+                />
+              </label>
+              <label className={`${labelClass} col-span-2`}>
                 Screenshot (Drive-link)
                 <input
                   className={inputClass}

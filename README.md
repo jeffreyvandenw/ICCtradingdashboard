@@ -119,8 +119,8 @@ winrate, avg RR, net R) for comparison, plus a form to start a new session
 dashboard, minus trades/week) and the session's trades. Sessions can be
 deleted (with their trades) from the overview or the session page.
 
-**P&L curve**: every session has a starting balance (prefilled from the
-previous session). Each trade risks 10% of the *current* balance
+**P&L curve**: every session has its own starting balance (entered per
+session; nothing carries over from the previous one). Each trade risks 10% of the *current* balance
 (`BACKTEST_RISK_PCT` in `lib/backtest-pnl.ts`): a loss costs 10%, a win
 earns 10% × RR, breakeven changes nothing. The curve of the resulting
 balance replaces the R equity curve on the session page.

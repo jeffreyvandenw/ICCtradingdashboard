@@ -40,11 +40,7 @@ export default async function BacktestOverviewPage({
         Backtesten
       </h1>
 
-      <NewSessionForm
-        defaultHypothesis={hypothesis}
-        defaultBalance={sessions[0]?.startingBalance}
-        lessonId={lessonId}
-      />
+      <NewSessionForm defaultHypothesis={hypothesis} lessonId={lessonId} />
 
       <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-surface shadow-sm">
         <table className="w-full min-w-[720px] text-left text-sm">
