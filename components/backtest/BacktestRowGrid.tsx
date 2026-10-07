@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createTrade } from "@/lib/trades";
+import { calculateRR, DEFAULT_PAIR } from "@/lib/rr";
 
 interface RowState {
   key: string;
@@ -15,7 +16,6 @@ interface RowState {
   rr: string;
   outcome: "win" | "loss" | "breakeven" | "";
   screenshotUrl: string;
-  notes: string;
   beforeNote: string;
   afterNote: string;
   saving: boolean;
@@ -25,7 +25,7 @@ interface RowState {
 function blankRow(key: string): RowState {
   return {
     key,
-    pair: "",
+    pair: DEFAULT_PAIR,
     direction: "long",
     entry: "",
     stopLoss: "",
@@ -34,7 +34,6 @@ function blankRow(key: string): RowState {
     rr: "",
     outcome: "",
     screenshotUrl: "",
-    notes: "",
     beforeNote: "",
     afterNote: "",
     saving: false,
@@ -86,7 +85,7 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
         setupTag: null,
         mistakeTags: [],
         screenshotUrl: row.screenshotUrl || null,
-        notes: row.notes || null,
+        notes: null,
         beforeNote: row.beforeNote || null,
         afterNote: row.afterNote || null,
       });
@@ -108,189 +107,190 @@ export function BacktestRowGrid({ sessionId }: { sessionId: string }) {
   }
 
   const inputClass =
-    "w-full rounded-md border border-neutral-300 px-2 py-1.5 text-sm";
-  const labelClass =
-    "block text-xs font-medium text-neutral-600";
+    "mt-1 w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-gold-400 focus:outline-none";
+  const labelClass = "block text-xs font-medium text-neutral-600";
 
   return (
     <div className="space-y-3">
-      {rows.map((row) => (
-        <div
-          key={row.key}
-          className="space-y-3 rounded-lg border border-neutral-200 bg-white p-4"
-        >
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
-            <label className={labelClass}>
-              Pair
-              <input
-                className={inputClass}
-                value={row.pair}
-                onChange={(e) => updateRow(row.key, { pair: e.target.value })}
-              />
-            </label>
-            <label className={labelClass}>
-              Richting
-              <select
-                className={inputClass}
-                value={row.direction}
-                onChange={(e) =>
-                  updateRow(row.key, {
-                    direction: e.target.value as "long" | "short",
-                  })
-                }
-              >
-                <option value="long">Long</option>
-                <option value="short">Short</option>
-              </select>
-            </label>
-            <label className={labelClass}>
-              Entry
-              <input
-                type="number"
-                step="any"
-                className={inputClass}
-                value={row.entry}
-                onChange={(e) => updateRow(row.key, { entry: e.target.value })}
-              />
-            </label>
-            <label className={labelClass}>
-              Stop loss
-              <input
-                type="number"
-                step="any"
-                className={inputClass}
-                value={row.stopLoss}
-                onChange={(e) =>
-                  updateRow(row.key, { stopLoss: e.target.value })
-                }
-              />
-            </label>
-            <label className={labelClass}>
-              Take profit
-              <input
-                type="number"
-                step="any"
-                className={inputClass}
-                value={row.takeProfit}
-                onChange={(e) =>
-                  updateRow(row.key, { takeProfit: e.target.value })
-                }
-              />
-            </label>
-            <label className={labelClass}>
-              Exit
-              <input
-                type="number"
-                step="any"
-                className={inputClass}
-                value={row.exitPrice}
-                onChange={(e) =>
-                  updateRow(row.key, { exitPrice: e.target.value })
-                }
-              />
-            </label>
-            <label className={labelClass}>
-              RR (auto, overschrijfbaar)
-              <input
-                type="number"
-                step="any"
-                placeholder="auto"
-                className={inputClass}
-                value={row.rr}
-                onChange={(e) => updateRow(row.key, { rr: e.target.value })}
-              />
-            </label>
-          </div>
+      {rows.map((row) => {
+        const autoRR = row.entry
+          ? calculateRR(
+              row.direction,
+              Number(row.entry),
+              row.stopLoss ? Number(row.stopLoss) : null,
+              row.takeProfit ? Number(row.takeProfit) : null,
+            )
+          : null;
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <label className={labelClass}>
-              Uitkomst
-              <select
-                className={inputClass}
-                value={row.outcome}
-                onChange={(e) =>
-                  updateRow(row.key, {
-                    outcome: e.target.value as RowState["outcome"],
-                  })
-                }
-              >
-                <option value="">—</option>
-                <option value="win">Win</option>
-                <option value="loss">Loss</option>
-                <option value="breakeven">Breakeven</option>
-              </select>
-            </label>
-            <label className={`${labelClass} sm:col-span-3`}>
-              Screenshot (Google Drive link)
-              <input
-                className={inputClass}
-                value={row.screenshotUrl}
-                onChange={(e) =>
-                  updateRow(row.key, { screenshotUrl: e.target.value })
-                }
-              />
-            </label>
-            <label className={`${labelClass} col-span-2 sm:col-span-4`}>
-              Opmerkingen
-              <textarea
-                rows={2}
-                className={inputClass}
-                value={row.notes}
-                onChange={(e) => updateRow(row.key, { notes: e.target.value })}
-              />
-            </label>
-            <label className={`${labelClass} col-span-2`}>
-              Before-notitie
-              <textarea
-                rows={2}
-                className={inputClass}
-                value={row.beforeNote}
-                onChange={(e) =>
-                  updateRow(row.key, { beforeNote: e.target.value })
-                }
-              />
-            </label>
-            <label className={`${labelClass} col-span-2`}>
-              After-notitie
-              <textarea
-                rows={2}
-                className={inputClass}
-                value={row.afterNote}
-                onChange={(e) =>
-                  updateRow(row.key, { afterNote: e.target.value })
-                }
-              />
-            </label>
-          </div>
+        return (
+          <div
+            key={row.key}
+            className="space-y-3 rounded-2xl border border-neutral-200 bg-surface p-4 shadow-sm"
+          >
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              <label className={labelClass}>
+                Pair
+                <input
+                  className={inputClass}
+                  value={row.pair}
+                  onChange={(e) => updateRow(row.key, { pair: e.target.value })}
+                />
+              </label>
+              <label className={labelClass}>
+                Richting
+                <select
+                  className={inputClass}
+                  value={row.direction}
+                  onChange={(e) =>
+                    updateRow(row.key, {
+                      direction: e.target.value as "long" | "short",
+                    })
+                  }
+                >
+                  <option value="long">Long</option>
+                  <option value="short">Short</option>
+                </select>
+              </label>
+              <label className={labelClass}>
+                Entry
+                <input
+                  type="number"
+                  step="any"
+                  className={inputClass}
+                  value={row.entry}
+                  onChange={(e) => updateRow(row.key, { entry: e.target.value })}
+                />
+              </label>
+              <label className={labelClass}>
+                Stop loss
+                <input
+                  type="number"
+                  step="any"
+                  className={inputClass}
+                  value={row.stopLoss}
+                  onChange={(e) =>
+                    updateRow(row.key, { stopLoss: e.target.value })
+                  }
+                />
+              </label>
+              <label className={labelClass}>
+                Take profit
+                <input
+                  type="number"
+                  step="any"
+                  className={inputClass}
+                  value={row.takeProfit}
+                  onChange={(e) =>
+                    updateRow(row.key, { takeProfit: e.target.value })
+                  }
+                />
+              </label>
+              <label className={labelClass}>
+                RR
+                <input
+                  type="number"
+                  step="any"
+                  placeholder={autoRR != null ? autoRR.toFixed(2) : "auto"}
+                  className={inputClass}
+                  value={row.rr}
+                  onChange={(e) => updateRow(row.key, { rr: e.target.value })}
+                />
+              </label>
+            </div>
 
-          {row.error && <p className="text-sm text-red-600">{row.error}</p>}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <label className={`${labelClass} col-span-2 sm:col-span-4`}>
+                Before-notitie
+                <textarea
+                  rows={2}
+                  className={inputClass}
+                  value={row.beforeNote}
+                  onChange={(e) =>
+                    updateRow(row.key, { beforeNote: e.target.value })
+                  }
+                />
+              </label>
+              <label className={labelClass}>
+                Uitkomst
+                <select
+                  className={inputClass}
+                  value={row.outcome}
+                  onChange={(e) =>
+                    updateRow(row.key, {
+                      outcome: e.target.value as RowState["outcome"],
+                    })
+                  }
+                >
+                  <option value="">—</option>
+                  <option value="win">Win</option>
+                  <option value="loss">Loss</option>
+                  <option value="breakeven">Breakeven</option>
+                </select>
+              </label>
+              <label className={labelClass}>
+                Exit
+                <input
+                  type="number"
+                  step="any"
+                  className={inputClass}
+                  value={row.exitPrice}
+                  onChange={(e) =>
+                    updateRow(row.key, { exitPrice: e.target.value })
+                  }
+                />
+              </label>
+              <label className={`${labelClass} col-span-2`}>
+                Screenshot (Drive-link)
+                <input
+                  className={inputClass}
+                  value={row.screenshotUrl}
+                  onChange={(e) =>
+                    updateRow(row.key, { screenshotUrl: e.target.value })
+                  }
+                />
+              </label>
+              <label className={`${labelClass} col-span-2 sm:col-span-4`}>
+                After-notitie
+                <textarea
+                  rows={2}
+                  className={inputClass}
+                  value={row.afterNote}
+                  onChange={(e) =>
+                    updateRow(row.key, { afterNote: e.target.value })
+                  }
+                />
+              </label>
+            </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              disabled={row.saving || !row.pair || !row.entry}
-              onClick={() => saveRow(row)}
-              className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
-            >
-              {row.saving ? "Opslaan..." : "Rij opslaan"}
-            </button>
-            {rows.length > 1 && (
+            {row.error && <p className="text-sm text-red-600">{row.error}</p>}
+
+            <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => removeRow(row.key)}
-                className="text-xs text-neutral-500 hover:underline"
+                disabled={row.saving || !row.pair || !row.entry}
+                onClick={() => saveRow(row)}
+                className="rounded-lg bg-gold-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-gold-500 disabled:opacity-50"
               >
-                Rij verwijderen
+                {row.saving ? "Opslaan..." : "Rij opslaan"}
               </button>
-            )}
+              {rows.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeRow(row.key)}
+                  className="text-xs text-neutral-500 hover:underline"
+                >
+                  Rij verwijderen
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       <button
         type="button"
         onClick={addRow}
-        className="rounded-md border border-dashed border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100"
+        className="rounded-lg border border-dashed border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100"
       >
         + Nieuwe rij
       </button>

@@ -39,7 +39,7 @@ export default async function LessonPage({
       {lesson.videoRef && <VideoLink url={lesson.videoRef} />}
 
       {lesson.content && (
-        <div className="whitespace-pre-wrap rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-700">
+        <div className="whitespace-pre-wrap rounded-lg border border-neutral-200 bg-surface p-4 text-sm text-neutral-700">
           {lesson.content}
         </div>
       )}
@@ -56,7 +56,7 @@ export default async function LessonPage({
 
       <Link
         href={backtestHref}
-        className="inline-block rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white"
+        className="inline-block rounded-md bg-gold-600 hover:bg-gold-500 px-3 py-1.5 text-sm font-medium text-white"
       >
         Start backtest-sessie over dit onderwerp
       </Link>

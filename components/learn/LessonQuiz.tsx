@@ -34,7 +34,7 @@ export function LessonQuiz({
   const allAnswered = quiz.questions.every((_, i) => answers[i] != null);
 
   return (
-    <div className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4">
+    <div className="space-y-4 rounded-lg border border-neutral-200 bg-surface p-4">
       <p className="text-sm font-medium text-neutral-900">
         Quiz
       </p>
@@ -68,7 +68,7 @@ export function LessonQuiz({
         type="button"
         onClick={handleSubmit}
         disabled={!allAnswered || submitting}
-        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+        className="rounded-md bg-gold-600 hover:bg-gold-500 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
       >
         {submitting ? "Controleren..." : "Quiz controleren"}
       </button>

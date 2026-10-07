@@ -57,8 +57,14 @@ export async function createTodayCheckIn(input: unknown) {
     .insert(checkIns)
     .values({
       day: today,
-      didYesterday: values.didYesterday,
-      confidentToday: values.confidentToday,
+      didAsPromised: values.didAsPromised,
+      didAsPromisedNote: values.didAsPromised
+        ? null
+        : values.didAsPromisedNote || null,
+      confidentTomorrow: values.confidentTomorrow,
+      confidentTomorrowNote: values.confidentTomorrow
+        ? null
+        : values.confidentTomorrowNote || null,
       notes: values.notes || null,
     })
     .returning();

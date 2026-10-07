@@ -12,8 +12,6 @@ kaart per module; elke module heeft daarnaast zijn eigen volledige pagina.
 - Drizzle ORM + drizzle-kit for schema/migrations
 - NextAuth (Credentials provider) for a single-user login
 - Tailwind CSS, Recharts
-- Anthropic SDK (`@anthropic-ai/sdk`) — used to turn a pasted video transcript
-  into a structured recipe (module 6)
 
 ## Local development
 
@@ -30,9 +28,6 @@ kaart per module; elke module heeft daarnaast zijn eigen volledige pagina.
    - `AUTH_SECRET` — generate with `openssl rand -base64 32`
    - `AUTH_USER_EMAIL` / `AUTH_USER_PASSWORD_HASH` — your login. Generate the
      hash with `npx tsx scripts/hash-password.ts <your-password>`.
-   - `ANTHROPIC_API_KEY` — optional, only needed for "Genereer recept met
-     Claude" on `/recipes/new`. Get one at https://console.anthropic.com.
-     Without it, recipes can still be added by filling in the fields by hand.
 
    Note: bcrypt hashes contain `$` characters, which Next.js's `.env` loader
    treats as variable references. Escape every `$` as `\$` in the file (the
@@ -56,21 +51,35 @@ kaart per module; elke module heeft daarnaast zijn eigen volledige pagina.
 
 ### Hub (`/`)
 
-Landing page after login. Daily check-in widget at the top (see Module 7),
-then one card per module (trading net R/winrate, open to-do count,
-currently-reading book, latest recipe), each linking through to its full
-page. This replaces the old behaviour where `/` was the trading dashboard
-directly.
+Landing page after login, kept compact: the daily check-in (see Module 7)
+and the open to-do's side by side, then three cards — Boodschappen (open
+items per shop), Boeken (currently reading) and Leren. Leren shows the next
+video: the one after the last completed lesson in the playlist you're
+working through. Once that playlist is finished (and no other one is in
+progress) it lists the playlists that are still open instead.
+
+### Theme
+
+Dark by default, with a light mode behind the sun/moon button in the top bar
+(remembered in a `theme` cookie, so there's no flash on load). Components
+use plain slate/neutral/accent Tailwind utilities; `app/globals.css`
+redefines those palette variables under `html.dark`, so there are no
+per-class `dark:` variants. The brand accent is `gold-*`.
 
 ### Module 7 — Dagelijkse check-in (`/checkin`)
 
-Three questions on the hub, once a day: did you do yesterday what you said
-you would, do you trust yourself to do today what's needed, and anything
-else on your mind. One row per calendar day (`check_ins.day`, unique) —
+Three questions on the hub, filled in at the end of the day: did you do
+today what you said you would, do you trust yourself to do tomorrow what's
+needed, and anything else on your mind. Answering "nee" to either of the
+first two opens a required field to explain what and why. (The DB columns
+are still named `did_yesterday`/`confident_today` from the old wording;
+in code they're `didAsPromised`/`confidentTomorrow`.) One row per calendar day (`check_ins.day`, unique) —
 submitting is a one-way action, there's no edit route.
 
-`/checkin` shows a read-only monthly calendar plus that month's answers:
-- **Green** = filled in that day. **Red** = missed (in the past, on/after
+`/checkin` shows a read-only monthly calendar; click a day to read what you
+filled in that day:
+- **Green** = filled in, both answers "ja". **Orange** = filled in, but at
+  least one "nee". **Red** = not filled in (in the past, on/after
   the first-ever check-in). **Neutral/gray** = today (still open, doesn't
   turn red until the day is over), a future day, or a day before the habit
   started — nothing to hold you accountable for before the feature existed.
@@ -80,9 +89,12 @@ submitting is a one-way action, there's no edit route.
 
 ### Module 1 — Trading journal (`/trading`, `/day/[date]`)
 
-Monthly calendar (color-coded by daily net R), stats scoped to `type = "live"`
-trades only (avg RR, winrate, trades/week, profit factor, expectancy, equity
-curve, winrate by direction/session), CSV export. Day view has a quick-add
+Monthly calendar (color-coded by daily net R, with the day's P&L), stats
+scoped to `type = "live"` trades only (net R, P&L, avg RR, winrate,
+trades/week, profit factor, expectancy, equity curve, winrate by
+direction), CSV export. Each trade has an optional P&L amount (€) next to
+its R result. The pair is prefilled with XAUUSD (`DEFAULT_PAIR` in
+`lib/rr.ts`). Day view has a quick-add
 trade form (expandable to the full field set) and a trade list.
 
 ### Module 2 — Leren (`/learn`, `/learn/glossary`)
@@ -104,7 +116,14 @@ components would need to change shape.
 Overview page lists all sessions side by side (date, hypothesis, trade count,
 winrate, avg RR, net R) for comparison, plus a form to start a new session
 (hypothesis field). Session detail shows stats (same `StatsPanel` as the
-dashboard) and the session's trades.
+dashboard, minus trades/week) and the session's trades. Sessions can be
+deleted (with their trades) from the overview or the session page.
+
+**P&L curve**: every session has its own starting balance (entered per
+session; nothing carries over from the previous one). Each trade risks 10% of the *current* balance
+(`BACKTEST_RISK_PCT` in `lib/backtest-pnl.ts`): a loss costs 10%, a win
+earns 10% × RR, breakeven changes nothing. The curve of the resulting
+balance replaces the R equity curve on the session page.
 
 **Design choices worth knowing about:**
 - **Only the most recently created session is editable.** Every older session
@@ -136,21 +155,11 @@ no self-hosted book database) to prefill title, author, cover and page count
 
 ### Module 6 — Recepten (`/recipes`, `/recipes/new`, `/recipes/[id]`)
 
-Recipes built from a video link + its transcript, so saving a recipe you saw
-on YouTube/TikTok takes seconds instead of retyping it by hand:
-
-1. Paste the video URL and the transcript (YouTube: copy the transcript from
-   the video's "..." menu; TikTok has no public transcript API, so paste its
-   auto-captions or your own notes instead).
-2. "Genereer recept met Claude" (`lib/recipe-ai.ts`) sends the transcript to
-   the Anthropic API and gets back a structured title/ingredients/steps/tags
-   via tool use — nothing is invented that isn't in the transcript.
-3. Everything is editable before saving, so a bad or partial extraction is a
-   quick fix, not a re-do.
-
-The video itself is embedded on the recipe detail page (YouTube `/embed/` or
-TikTok `/embed/v2/`, via `lib/video-embed.ts`); unrecognized links fall back
-to a "Bekijk video →" link.
+Recipes are entered by hand: an optional video link, title, ingredients
+and steps (one per line) and comma-separated tags. The platform (YouTube /
+TikTok) is derived from the link, and the detail page links to the video.
+The overview has a search bar that matches every word against the title
+and tags; clicking a tag searches for it.
 
 ### Module 8 — Boodschappen (`/boodschappen`)
 
@@ -189,6 +198,9 @@ breakeven contributes 0 — the standard trading-journal convention.
 - `npm run db:push` — push schema directly without a migration file (quick local iteration)
 - `npm run db:studio` — Drizzle Studio (browse the DB)
 - `npm run db:seed` — seed dummy data across all three modules
+
+If you can't run `db:migrate` against production, opening
+`/api/admin/migrate` while logged in applies migration 0005 (idempotent).
 
 ## Deploying
 

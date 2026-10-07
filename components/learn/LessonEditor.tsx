@@ -87,7 +87,7 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4"
+      className="space-y-4 rounded-lg border border-neutral-200 bg-surface p-4"
     >
       <div className="grid grid-cols-2 gap-3">
         <label className={`${labelClass} col-span-2`}>
@@ -229,7 +229,7 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+        className="rounded-md bg-gold-600 hover:bg-gold-500 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
       >
         {submitting ? "Opslaan..." : "Les opslaan"}
       </button>

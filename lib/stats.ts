@@ -15,6 +15,8 @@ export function tradeRMultiple(trade: Pick<Trade, "outcome" | "rr">): number {
 export interface DashboardStats {
   tradeCount: number;
   netR: number;
+  /** Sum of the P&L of trades that have one; null when none do. */
+  netPnl: number | null;
   avgRR: number | null;
   winratePct: number | null;
   avgTradesPerWeek: number | null;
@@ -84,6 +86,12 @@ export function computeDashboardStats(trades: Trade[]): DashboardStats {
     };
   });
 
+  const pnlValues = trades
+    .map((t) => t.pnl)
+    .filter((pnl): pnl is number => pnl != null);
+  const netPnl =
+    pnlValues.length > 0 ? pnlValues.reduce((a, b) => a + b, 0) : null;
+
   const winrateByDirection = {
     long: winrate(decided.filter((t) => t.direction === "long")),
     short: winrate(decided.filter((t) => t.direction === "short")),
@@ -98,6 +106,7 @@ export function computeDashboardStats(trades: Trade[]): DashboardStats {
   return {
     tradeCount: decided.length,
     netR: cumulative,
+    netPnl,
     avgRR,
     winratePct,
     avgTradesPerWeek,

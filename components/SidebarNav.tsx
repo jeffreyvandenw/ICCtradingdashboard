@@ -210,12 +210,12 @@ export function SidebarNav() {
                 className={cn(
                   "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active
-                    ? "bg-indigo-50 text-indigo-700"
+                    ? "bg-gold-50 text-gold-700"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
                 )}
               >
                 <span
-                  className={cn(active ? "text-indigo-600" : "text-slate-400")}
+                  className={cn(active ? "text-gold-600" : "text-slate-400")}
                 >
                   {item.icon}
                 </span>

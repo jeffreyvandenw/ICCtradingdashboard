@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { LessonModule } from "@/lib/learn-modules";
 
 export function ModuleList({ modules }: { modules: LessonModule[] }) {
-  const [openKey, setOpenKey] = useState<string | null>(modules[0]?.key ?? null);
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
     <div className="space-y-3">
@@ -20,7 +20,7 @@ export function ModuleList({ modules }: { modules: LessonModule[] }) {
         return (
           <div
             key={module.key}
-            className="rounded-lg border border-neutral-200 bg-white"
+            className="rounded-lg border border-neutral-200 bg-surface"
           >
             <button
               type="button"

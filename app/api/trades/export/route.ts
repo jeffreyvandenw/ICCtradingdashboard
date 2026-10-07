@@ -9,6 +9,7 @@ const COLUMNS = [
   "takeProfit",
   "exitPrice",
   "rr",
+  "pnl",
   "outcome",
   "tradedAt",
   "session",

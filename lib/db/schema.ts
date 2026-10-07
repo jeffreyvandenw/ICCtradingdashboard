@@ -33,6 +33,9 @@ export const backtestSessions = pgTable("backtest_sessions", {
     .defaultNow(),
   hypothesis: text("hypothesis").notNull(),
   summary: text("summary"),
+  // Account size the session starts with; each trade risks
+  // BACKTEST_RISK_PCT of the running balance (see lib/backtest-pnl.ts).
+  startingBalance: doublePrecision("starting_balance"),
   lessonId: uuid("lesson_id").references((): AnyPgColumn => lessons.id, {
     onDelete: "set null",
   }),
@@ -55,6 +58,8 @@ export const trades = pgTable("trades", {
   exitPrice: doublePrecision("exit_price"),
 
   rr: doublePrecision("rr"),
+  // Realised profit/loss in account currency (live trades).
+  pnl: doublePrecision("pnl"),
 
   outcome: tradeOutcomeEnum("outcome"),
 
@@ -140,8 +145,14 @@ export const books = pgTable("books", {
 export const checkIns = pgTable("check_ins", {
   id: uuid("id").primaryKey().defaultRandom(),
   day: date("day", { mode: "string" }).notNull().unique(),
-  didYesterday: boolean("did_yesterday").notNull(),
-  confidentToday: boolean("confident_today").notNull(),
+  // The check-in is filled in at the end of the day. The column names date
+  // from when it asked about "yesterday" and "today"; the questions now ask
+  // whether you did today what you said, and whether you trust yourself to
+  // do tomorrow what's needed.
+  didAsPromised: boolean("did_yesterday").notNull(),
+  didAsPromisedNote: text("did_as_promised_note"),
+  confidentTomorrow: boolean("confident_today").notNull(),
+  confidentTomorrowNote: text("confident_tomorrow_note"),
   notes: text("notes"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

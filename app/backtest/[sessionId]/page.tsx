@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
+import { nl } from "date-fns/locale";
 import {
   getBacktestSession,
   getLatestBacktestSessionId,
@@ -11,6 +12,8 @@ import { StatsPanel } from "@/components/stats/StatsPanel";
 import { BacktestRowGrid } from "@/components/backtest/BacktestRowGrid";
 import { SessionSummaryForm } from "@/components/backtest/SessionSummaryForm";
 import { TradeList } from "@/components/trade-form/TradeList";
+import { BacktestPnlCard } from "@/components/backtest/BacktestPnlCard";
+import { DeleteSessionButton } from "@/components/backtest/DeleteSessionButton";
 
 export default async function BacktestSessionPage({
   params,
@@ -33,7 +36,7 @@ export default async function BacktestSessionPage({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-neutral-900">
-            {format(session.createdAt, "d MMMM yyyy")}
+            {format(session.createdAt, "d MMMM yyyy", { locale: nl })}
           </h1>
           <p className="mt-1 text-sm text-neutral-600">
             {session.hypothesis}
@@ -44,15 +47,32 @@ export default async function BacktestSessionPage({
             </p>
           )}
         </div>
-        <Link
-          href="/backtest"
-          className="shrink-0 text-sm text-neutral-500 hover:text-neutral-900"
-        >
-          &larr; Alle sessies
-        </Link>
+        <div className="flex shrink-0 items-center gap-4">
+          <DeleteSessionButton
+            sessionId={session.id}
+            label={session.hypothesis}
+            redirectTo="/backtest"
+          />
+          <Link
+            href="/backtest"
+            className="text-sm text-neutral-500 hover:text-neutral-900"
+          >
+            &larr; Alle sessies
+          </Link>
+        </div>
       </div>
 
-      <StatsPanel stats={stats} />
+      <StatsPanel
+        stats={stats}
+        variant="backtest"
+        chart={
+          <BacktestPnlCard
+            sessionId={session.id}
+            startingBalance={session.startingBalance}
+            trades={sessionTrades.map(({ outcome, rr }) => ({ outcome, rr }))}
+          />
+        }
+      />
 
       {isActive ? (
         <>
@@ -64,7 +84,7 @@ export default async function BacktestSessionPage({
         </>
       ) : (
         session.summary && (
-          <div className="rounded-lg border border-neutral-200 bg-white p-4 text-sm">
+          <div className="rounded-2xl border border-neutral-200 bg-surface p-4 text-sm shadow-sm">
             <p className="text-xs font-medium text-neutral-500">
               Samenvatting
             </p>

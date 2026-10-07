@@ -1,16 +1,142 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Light theme. The app is written with slate/neutral/accent utilities; the
+ * dark theme below redefines those same palette variables, so every
+ * component switches theme without per-class `dark:` variants.
+ * "gold" is the brand accent (buttons, links, focus rings).
+ */
+@theme {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --color-page: #f6f5f2;
+  --color-surface: #ffffff;
+
+  --color-gold-50: #faf6ee;
+  --color-gold-100: #f2e9d5;
+  --color-gold-200: #e6d4ad;
+  --color-gold-300: #d6b97e;
+  --color-gold-400: #c9a45f;
+  --color-gold-500: #b8904a;
+  --color-gold-600: #9c7836;
+  --color-gold-700: #82622f;
+  --color-gold-800: #654c26;
+  --color-gold-900: #4a381d;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+:root {
+  --background: var(--color-page);
+  --foreground: #16171a;
+  --chart-grid: #e7e5e0;
+}
+
+html.dark {
+  color-scheme: dark;
+
+  --background: #0a0a0c;
+  --foreground: #ececee;
+  --chart-grid: #222429;
+
+  --color-page: #0a0a0c;
+  --color-surface: #131417;
+
+  /* Neutral scales, inverted: low numbers are dark, high numbers light. */
+  --color-slate-50: #17181c;
+  --color-slate-100: #1d1f23;
+  --color-slate-200: #272a2f;
+  --color-slate-300: #363940;
+  --color-slate-400: #6c7079;
+  --color-slate-500: #8d919a;
+  --color-slate-600: #a9adb5;
+  --color-slate-700: #c9ccd2;
+  --color-slate-800: #e2e4e7;
+  --color-slate-900: #f3f3f4;
+
+  --color-neutral-50: #17181c;
+  --color-neutral-100: #1d1f23;
+  --color-neutral-200: #272a2f;
+  --color-neutral-300: #363940;
+  --color-neutral-400: #6c7079;
+  --color-neutral-500: #8d919a;
+  --color-neutral-600: #a9adb5;
+  --color-neutral-700: #c9ccd2;
+  --color-neutral-800: #e2e4e7;
+  --color-neutral-900: #f3f3f4;
+
+  /* Accents: light tints become translucent glows, dark text becomes light. */
+  --color-gold-50: rgb(201 164 95 / 0.08);
+  --color-gold-100: rgb(201 164 95 / 0.14);
+  --color-gold-200: rgb(201 164 95 / 0.24);
+  --color-gold-400: #e0c48c;
+  --color-gold-500: #d4b06e;
+  --color-gold-600: #c19a55;
+  --color-gold-700: #e6cf9f;
+  --color-gold-800: #f0e2c4;
+  --color-gold-900: #f6ecd8;
+
+  --color-emerald-50: rgb(16 185 129 / 0.08);
+  --color-emerald-100: rgb(16 185 129 / 0.16);
+  --color-emerald-600: #10b981;
+  --color-emerald-700: #6ee7b7;
+  --color-emerald-800: #a7f3d0;
+  --color-emerald-900: #d1fae5;
+
+  --color-rose-50: rgb(244 63 94 / 0.08);
+  --color-rose-100: rgb(244 63 94 / 0.16);
+  --color-rose-600: #f43f5e;
+  --color-rose-700: #fda4af;
+  --color-rose-900: #ffe4e6;
+
+  --color-amber-50: rgb(245 158 11 / 0.08);
+  --color-amber-100: rgb(245 158 11 / 0.16);
+  --color-amber-600: #fbbf24;
+  --color-amber-700: #fcd34d;
+  --color-amber-900: #fef3c7;
+
+  --color-sky-50: rgb(14 165 233 / 0.08);
+  --color-sky-100: rgb(14 165 233 / 0.16);
+  --color-sky-600: #38bdf8;
+
+  --color-red-600: #f87171;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-feature-settings: "tnum" 1;
+}
+
+/* A soft warm glow at the top of the page, like light on brushed metal. */
+html.dark body {
+  background:
+    radial-gradient(
+      1200px 500px at 70% -10%,
+      rgb(201 164 95 / 0.07),
+      transparent 60%
+    ),
+    var(--background);
+  background-attachment: fixed;
+}
+
+/* Cards get a faint top sheen in dark mode so they read as raised panels. */
+html.dark .bg-surface {
+  background-image: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.025),
+    transparent 40%
+  );
+}
+
+html.dark .shadow-sm,
+html.dark .shadow,
+html.dark .shadow-md {
+  --tw-shadow-color: rgb(0 0 0 / 0.5);
+}
+
+html.dark {
+  --color-emerald-200: rgb(16 185 129 / 0.26);
+  --color-amber-200: rgb(245 158 11 / 0.26);
+  --color-rose-200: rgb(244 63 94 / 0.26);
 }

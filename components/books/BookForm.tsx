@@ -201,7 +201,7 @@ export function BookForm({ book }: { book?: Book }) {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+        className="rounded-lg bg-gold-600 px-4 py-2 text-sm font-medium text-white hover:bg-gold-500 disabled:opacity-50"
       >
         {submitting ? "Opslaan..." : "Opslaan"}
       </button>

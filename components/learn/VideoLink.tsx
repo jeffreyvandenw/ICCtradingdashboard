@@ -8,7 +8,7 @@ export function VideoLink({ url }: { url: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white p-4 text-sm font-medium text-sky-600 hover:bg-neutral-50 hover:underline"
+      className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-surface p-4 text-sm font-medium text-sky-600 hover:bg-neutral-50 hover:underline"
     >
       <span aria-hidden>▶</span>
       <span>Bekijk video op YouTube</span>
